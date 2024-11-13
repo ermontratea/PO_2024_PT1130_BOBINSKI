@@ -1,0 +1,6 @@
+:Zwierzę 0: Animal [direction=Północ, position=(2, 3)]
+9Zwierzę 1: Animal [direction=Wschód, position=(0, 0)]
+:Zwierzę 0: Animal [direction=Północ, position=(2, 4)]
+9Zwierzę 1: Animal [direction=Wschód, position=(1, 0)]
+9Zwierzę 0: Animal [direction=Zachód, position=(2, 4)]
+:Zwierzę 1: Animal [direction=Północ, position=(1, 0)]
