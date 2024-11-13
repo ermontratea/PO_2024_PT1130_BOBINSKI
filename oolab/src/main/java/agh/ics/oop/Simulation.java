@@ -19,7 +19,7 @@ public class Simulation {
         this.animals = new ArrayList<Animal>();
 
         for (Vector2d position : positions) {
-            Animal animal = new Animal(MapDirection.NORTH, position);
+            Animal animal = new Animal(position);
             if(map.place(animal)){
                 this.animals.add(animal);
             }
