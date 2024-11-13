@@ -12,8 +12,8 @@ class SimulationTest {
     void placeAnimalsOnMap() {
 
         RectangularMap map = new RectangularMap(5, 5);
-        Animal animal1 = new Animal(MapDirection.NORTH, new Vector2d(2, 2));
-        Animal animal2 = new Animal(MapDirection.SOUTH, new Vector2d(3, 3));
+        Animal animal1 = new Animal(new Vector2d(2, 2));
+        Animal animal2 = new Animal(new Vector2d(3, 3));
 
 
         boolean placed1 = map.place(animal1);
@@ -29,8 +29,8 @@ class SimulationTest {
     @Test
     void preventPlacingAnimalsOnSamePosition() {
         RectangularMap map = new RectangularMap(5, 5);
-        Animal animal1 = new Animal(MapDirection.NORTH, new Vector2d(2, 2));
-        Animal animal2 = new Animal(MapDirection.SOUTH, new Vector2d(2, 2));
+        Animal animal1 = new Animal(new Vector2d(2, 2));
+        Animal animal2 = new Animal(new Vector2d(2, 2));
 
         boolean placed1 = map.place(animal1);
         boolean placed2 = false;
@@ -48,7 +48,7 @@ class SimulationTest {
     @Test
     void animalMovement() {
         RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(MapDirection.NORTH, new Vector2d(2, 2));
+        Animal animal = new Animal(new Vector2d(2, 2));
         map.place(animal);
 
         map.move(animal, MoveDirection.FORWARD);
@@ -62,7 +62,7 @@ class SimulationTest {
     @Test
     void preventMovementOutsideMap() {
         RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(MapDirection.NORTH, new Vector2d(2, 5)); // Pozycja przy górnej krawędzi
+        Animal animal = new Animal(new Vector2d(2, 5)); // Pozycja przy górnej krawędzi
         map.place(animal);
 
         map.move(animal, MoveDirection.FORWARD);
@@ -77,8 +77,8 @@ class SimulationTest {
     void multipleAnimalsMovement() {
 
         RectangularMap map = new RectangularMap(5, 5);
-        Animal animal1 = new Animal(MapDirection.NORTH, new Vector2d(2, 2));
-        Animal animal2 = new Animal(MapDirection.EAST, new Vector2d(4, 4));
+        Animal animal1 = new Animal(new Vector2d(2, 2));
+        Animal animal2 = new Animal(new Vector2d(4, 4));
         map.place(animal1);
         map.place(animal2);
 
