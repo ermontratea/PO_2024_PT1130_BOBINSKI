@@ -29,11 +29,13 @@ public class Vector2d {
     public Vector2d subtract(Vector2d other) {
         return new Vector2d(x - other.getX(), y - other.getY());
     }
+
     public Vector2d upperRight(Vector2d other){
         return new Vector2d(Math.max(this.x, other.x), Math.max(this.y, other.y));
     }
     public Vector2d lowerLeft(Vector2d other){
         return new Vector2d(Math.min(this.x, other.x), Math.min(this.y, other.y));
+
     }
     public Vector2d opposite() {
         return new Vector2d(-this.x, -this.y);
@@ -46,7 +48,9 @@ public class Vector2d {
         Vector2d that = (Vector2d) other;
         return x == that.getX() && y == that.getY();
     }
+
     @Override
+
     public int hashCode(){
         return Objects.hash(x,y);
     }
