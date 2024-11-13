@@ -10,34 +10,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
-public class Simulation {
-    private final WorldMap map;
-    private final List<Animal> animals;
-    private final List<MoveDirection> directions;
+public class Simulation<T,P> {
+    private final WorldMap<T,P> map;
+    private final List<T> objects = new ArrayList<>();
+    private final List<MoveDirection> directions  = new ArrayList<>();
 
-    public Simulation(List<Vector2d> positions, List<MoveDirection> directions, WorldMap map) {
-        this.animals = new ArrayList<Animal>();
-
-        for (Vector2d position : positions) {
-            Animal animal = new Animal(MapDirection.NORTH, position);
-            if(map.place(animal)){
-                this.animals.add(animal);
-            }
-        }
+    public Simulation(List<T> objects, List<MoveDirection> directions, WorldMap<T,P> map) {
+        this.directions.addAll(directions);
         this.map = map;
-        this.directions = directions;
-
+        for(T object : objects){
+            this.objects.add(object);
+            map.place(object);
+        }
     }
 
 
-    public List<Animal> getAnimals() {
-        return Collections.unmodifiableList(this.animals);
-    }
     public void run() {
-        System.out.println(map);
-        for(int i = 0; i < directions.size(); i++){
-            map.move(animals.get(i % animals.size()), directions.get(i));
-            System.out.println(map);
+        for (int i = 0; i < directions.size(); i++) {
+            T object = objects.get(i % objects.size());
+            MoveDirection direction = directions.get(i);
+            map.move(object, direction);
         }
     }
 }
