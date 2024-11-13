@@ -7,13 +7,12 @@ public class Animal {
     private Vector2d position;
 
     public Animal(){
-        this.direction = MapDirection.NORTH;
-        this.position = new Vector2d(2,2);
+        this(new Vector2d(2,2));
     }
 
-    public Animal(MapDirection direction, Vector2d coordinates){
-        this.direction = direction;
-        this.position = coordinates;
+    public Animal(Vector2d position){
+        this.direction = MapDirection.NORTH;
+        this.position = position;
     }
 
     public Vector2d getPosition() {
