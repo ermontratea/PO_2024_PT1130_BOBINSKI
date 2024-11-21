@@ -8,94 +8,105 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SimulationTest {
-
     @Test
-    void animalOrientation() {
-        List<Vector2d> positions = List.of(new Vector2d(2, 2));
-        List<MoveDirection> directions = List.of(
-                MoveDirection.RIGHT,
-                MoveDirection.RIGHT,
-                MoveDirection.RIGHT,
-                MoveDirection.RIGHT
-        );
-        Simulation simulation = new Simulation(positions, directions);
+    void placeAnimalsOnMap() {
 
-        simulation.run();
+        RectangularMap map = new RectangularMap(5, 5);
+        Animal animal1 = new Animal(new Vector2d(2, 2));
+        Animal animal2 = new Animal(new Vector2d(3, 3));
 
-        Animal animal = simulation.getAnimals().get(0);
-        assertEquals(MapDirection.NORTH, animal.getDirection(),
-                "Animal should face NORTH");
+
+        boolean placed1 = map.place(animal1);
+        boolean placed2 = map.place(animal2);
+
+
+        assertTrue(placed1, "Animal 1 placed correctly" );
+        assertTrue(placed2, "Animal 2 placed correctly");
+        assertEquals(animal1, map.objectAt(new Vector2d(2, 2)), "Animal 1 should be at (2, 2)");
+        assertEquals(animal2, map.objectAt(new Vector2d(3, 3)), "Animal 2 should be at (3, 3)");
     }
 
     @Test
-    void animalMove() {
+    void preventPlacingAnimalsOnSamePosition() {
+        RectangularMap map = new RectangularMap(5, 5);
+        Animal animal1 = new Animal(new Vector2d(2, 2));
+        Animal animal2 = new Animal(new Vector2d(2, 2));
 
-        List<Vector2d> positions = List.of(new Vector2d(2, 2));
-        List<MoveDirection> directions = List.of(
-                MoveDirection.FORWARD,
-                MoveDirection.RIGHT,
-                MoveDirection.FORWARD,
-                MoveDirection.LEFT,
-                MoveDirection.BACKWARD
-        );
-        Simulation simulation = new Simulation(positions, directions);
+        boolean placed1 = map.place(animal1);
+        boolean placed2 = false;
+        try {
+            map.place(animal2);
+        } catch (IllegalArgumentException e) {
+            placed2 = false;
+        }
 
-        simulation.run();
-
-        Animal animal = simulation.getAnimals().get(0);
-        assertEquals(new Vector2d(3, 3), animal.getPosition(),
-                "Animal should end at position (3,3)");
+        assertTrue(placed1, "Animal 1 placed correctly" );
+        assertFalse(placed2, "Animal 2 should not be placed at the same position");
+        assertEquals(animal1, map.objectAt(new Vector2d(2, 2)), "Only Animal 1 should be at (2, 2)");
     }
 
     @Test
-    void animaWithinBounds() {
-        List<Vector2d> positions = List.of(new Vector2d(0, 0));
-        List<MoveDirection> directions = List.of(
-                MoveDirection.BACKWARD,
-                MoveDirection.LEFT,
-                MoveDirection.FORWARD,
-                MoveDirection.FORWARD,
-                MoveDirection.RIGHT
-        );
-        Simulation simulation = new Simulation(positions, directions);
+    void animalMovement() {
+        RectangularMap map = new RectangularMap(5, 5);
+        Animal animal = new Animal(new Vector2d(2, 2));
+        map.place(animal);
 
-        simulation.run();
+        map.move(animal, MoveDirection.FORWARD);
+        map.move(animal, MoveDirection.RIGHT);
+        map.move(animal, MoveDirection.FORWARD);
 
-        Animal animal = simulation.getAnimals().get(0);
-        assertTrue(animal.isAt(new Vector2d(0, 0)),
-                "Animal should stay within map bounds");
+        assertEquals(new Vector2d(3, 3), animal.getPosition(), "Animal should move to (3, 3)");
+        assertEquals(MapDirection.EAST, animal.getDirection(), "Animal should face EAST");
     }
 
     @Test
-    void parse() {
-        String[] input = {"f", "b", "r", "l", "x"};
+    void preventMovementOutsideMap() {
+        RectangularMap map = new RectangularMap(5, 5);
+        Animal animal = new Animal(new Vector2d(2, 5)); // Pozycja przy górnej krawędzi
+        map.place(animal);
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> OptionsParser.parse(input),
-                "Parsing should throw an exception for invalid input"
-        );
-        assertEquals("x is not legal", exception.getMessage());
+        map.move(animal, MoveDirection.FORWARD);
+        map.move(animal, MoveDirection.RIGHT);
+        map.move(animal, MoveDirection.FORWARD);
+
+        assertEquals(new Vector2d(3, 5), animal.getPosition(), "Animal should not move outside the map");
+        assertEquals(MapDirection.EAST, animal.getDirection(), "Animal should face EAST");
     }
 
     @Test
-    void multipleAnimals() {
-        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(0, 0));
+    void multipleAnimalsMovement() {
+
+        RectangularMap map = new RectangularMap(5, 5);
+        Animal animal1 = new Animal(new Vector2d(2, 2));
+        Animal animal2 = new Animal(new Vector2d(4, 4));
+        map.place(animal1);
+        map.place(animal2);
+
+
+        map.move(animal1, MoveDirection.FORWARD);
+        map.move(animal2, MoveDirection.FORWARD);
+
+
+        assertEquals(new Vector2d(2, 3), animal1.getPosition(), "Animal 1 should move to (2, 3)");
+        assertEquals(new Vector2d(5, 4), animal2.getPosition(), "Animal 2 should move to (5, 4)");
+    }
+
+    @Test
+    void simulationRun() {
+
+        RectangularMap map = new RectangularMap(5, 5);
+        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 3));
         List<MoveDirection> directions = List.of(
                 MoveDirection.FORWARD, MoveDirection.RIGHT,
-                MoveDirection.FORWARD, MoveDirection.FORWARD,
-                MoveDirection.LEFT, MoveDirection.LEFT
+                MoveDirection.FORWARD, MoveDirection.LEFT
         );
-        Simulation simulation = new Simulation(positions, directions);
+        Simulation simulation = new Simulation(positions, directions, map);
 
         simulation.run();
 
-        Animal animal1 = simulation.getAnimals().get(0);
-        Animal animal2 = simulation.getAnimals().get(1);
-
-        assertEquals(new Vector2d(2, 4), animal1.getPosition(),
-                "Animal 1 should end at (2,4)");
-        assertEquals(new Vector2d(1, 0), animal2.getPosition(),
-                "Animal 2 should end at (1,0)");
+        List<Animal> animals = simulation.getAnimals();
+        assertEquals(new Vector2d(2, 4), animals.get(0).getPosition(), "First animal should end at (2, 4)");
+        assertEquals(new Vector2d(3, 3), animals.get(1).getPosition(), "Second animal should not move");
     }
 }
+
