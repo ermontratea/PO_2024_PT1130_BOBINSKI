@@ -2,56 +2,38 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.MapVisualizer;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 
-public class RectangularMap implements WorldMap{
-    private final int height;
-    private final int width;
+public class RectangularMap extends AbstractWorldMap{
     private final Vector2d lowerLeft;
     private final Vector2d upperRight;
-    private final Map<Vector2d, Animal> animals = new HashMap<>();
     private final MapVisualizer visualizer;
 
 
     public RectangularMap(int height, int width) {
-        this.height = height;
-        this.width = width;
         this.lowerLeft = new Vector2d(0, 0);
-        this.upperRight = new Vector2d(width, height);
+        this.upperRight = new Vector2d(width-1, height-1);
         this.visualizer = new MapVisualizer(this);
     }
 
-
     @Override
     public boolean place(Animal animal) {
-        if (canMoveTo(animal.getPosition())) {
-            animals.put(animal.getPosition(), animal);
-            return true;
-        }
-        return false;
+        return super.place(animal);
     }
 
     @Override
     public void move(Animal animal, MoveDirection direction) {
-        Vector2d oldPosition = animal.getPosition();
-        animal.move(direction, this);
-        Vector2d newPosition = animal.getPosition();
-
-        if (!oldPosition.equals(newPosition)) {
-            animals.remove(oldPosition);
-            animals.put(newPosition, animal);
-        }
+        super.move(animal,direction);
     }
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        return objectAt(position) != null;
+        return super.isOccupied(position);
     }
 
     @Override
-    public Animal objectAt(Vector2d position) {
-        return animals.get(position);
+    public WorldElement objectAt(Vector2d position) {
+        return super.objectAt(position);
     }
 
     @Override
@@ -60,6 +42,10 @@ public class RectangularMap implements WorldMap{
     }
     public String toString() {
         return visualizer.draw(lowerLeft, upperRight);
+    }
+    @Override
+    public Collection<WorldElement> getElements() {
+        return super.getElements();
     }
 
 }

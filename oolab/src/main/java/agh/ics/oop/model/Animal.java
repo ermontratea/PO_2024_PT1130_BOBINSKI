@@ -1,8 +1,7 @@
 package agh.ics.oop.model;
 
-import java.util.function.Function;
 
-public class Animal {
+public class Animal implements WorldElement{
     private MapDirection direction;
     private Vector2d position;
 
@@ -14,7 +13,7 @@ public class Animal {
         this.direction = MapDirection.NORTH;
         this.position = position;
     }
-
+    @Override
     public Vector2d getPosition() {
         return this.position;
     }
@@ -38,7 +37,7 @@ public class Animal {
         return this.position.equals(position);
     }
 
-    public void move(MoveDirection direction, RectangularMap map){
+    public void move(MoveDirection direction, WorldMap map){
         Vector2d potentialNewPosition;
 
         switch (direction){
