@@ -109,4 +109,3 @@ class SimulationTest {
         assertEquals(new Vector2d(3, 3), animals.get(1).getPosition(), "Second animal should not move");
     }
 }
-
