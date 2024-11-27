@@ -1,12 +1,12 @@
 package agh.ics.oop.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import agh.ics.oop.model.util.MapVisualizer;
+
+import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap{
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
+    protected MapVisualizer visualizer;
     @Override
     public boolean place(Animal animal) {
         if (objectAt(animal.getPosition()) instanceof Animal) {
