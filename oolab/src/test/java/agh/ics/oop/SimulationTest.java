@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SimulationTest {
     @Test
-    void placeAnimalsOnMap() {
+    void placeAnimalsOnMap() throws IncorrectPositionException {
 
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal(new Vector2d(2, 2));
@@ -27,26 +28,26 @@ class SimulationTest {
     }
 
     @Test
-    void preventPlacingAnimalsOnSamePosition() {
+    void preventPlacingAnimalsOnSamePosition() throws IncorrectPositionException {
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal(new Vector2d(2, 2));
+        map.place(animal1);
+
         Animal animal2 = new Animal(new Vector2d(2, 2));
 
-        boolean placed1 = map.place(animal1);
-        boolean placed2 = false;
-        try {
-            map.place(animal2);
-        } catch (IllegalArgumentException e) {
-            placed2 = false;
-        }
+        Exception exception = assertThrows(
+                IncorrectPositionException.class,
+                () -> map.place(animal2),
+                "Placing an animal on an occupied position should throw an exception."
+        );
 
-        assertTrue(placed1, "Animal 1 placed correctly" );
-        assertFalse(placed2, "Animal 2 should not be placed at the same position");
+        assertEquals("Position (2, 2) is not correct.", exception.getMessage());
         assertEquals(animal1, map.objectAt(new Vector2d(2, 2)), "Only Animal 1 should be at (2, 2)");
     }
 
+
     @Test
-    void animalMovement() {
+    void animalMovement() throws IncorrectPositionException {
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal = new Animal(new Vector2d(2, 2));
         map.place(animal);
@@ -60,21 +61,21 @@ class SimulationTest {
     }
 
     @Test
-    void preventMovementOutsideMap() {
+    void preventMovementOutsideMap() throws IncorrectPositionException {
         RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(new Vector2d(2, 5)); // Pozycja przy górnej krawędzi
+        Animal animal = new Animal(new Vector2d(2, 4)); // Pozycja przy górnej krawędzi
         map.place(animal);
 
         map.move(animal, MoveDirection.FORWARD);
         map.move(animal, MoveDirection.RIGHT);
         map.move(animal, MoveDirection.FORWARD);
 
-        assertEquals(new Vector2d(3, 5), animal.getPosition(), "Animal should not move outside the map");
+        assertEquals(new Vector2d(3, 4), animal.getPosition(), "Animal should not move outside the map");
         assertEquals(MapDirection.EAST, animal.getDirection(), "Animal should face EAST");
     }
 
     @Test
-    void multipleAnimalsMovement() {
+    void multipleAnimalsMovement() throws IncorrectPositionException {
 
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal(new Vector2d(2, 2));
@@ -88,7 +89,7 @@ class SimulationTest {
 
 
         assertEquals(new Vector2d(2, 3), animal1.getPosition(), "Animal 1 should move to (2, 3)");
-        assertEquals(new Vector2d(5, 4), animal2.getPosition(), "Animal 2 should move to (5, 4)");
+        assertEquals(new Vector2d(4, 4), animal2.getPosition(), "Animal 2 should move to (5, 4)");
     }
 
     @Test
