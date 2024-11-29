@@ -24,13 +24,12 @@ public abstract class AbstractWorldMap implements WorldMap{
         }
     }
     @Override
-    public boolean place(Animal animal) throws IncorrectPositionException {
+    public void place(Animal animal) throws IncorrectPositionException {
         if (!canMoveTo(animal.getPosition())) {
             throw new IncorrectPositionException(animal.getPosition());
         }
         animals.put(animal.getPosition(), animal);
         notifyObservers("Placed an animal at position " + animal.getPosition());
-        return true;
     }
     @Override
     public void move(Animal animal, MoveDirection direction) {
@@ -64,8 +63,7 @@ public abstract class AbstractWorldMap implements WorldMap{
     public abstract Boundary getCurrentBounds();
 
     public String toString() {
-        Vector2d lowerLeft = getCurrentBounds().lowerLeft();
-        Vector2d upperRight = getCurrentBounds().upperRight();
-        return visualizer.draw(lowerLeft, upperRight );
+        Boundary mapBoundary = getCurrentBounds();
+        return visualizer.draw(mapBoundary.lowerLeft(), mapBoundary.upperRight());
     }
 }

@@ -5,8 +5,6 @@ import java.util.*;
 
 public class GrassField extends AbstractWorldMap {
     private final Map<Vector2d, Grass> grass = new HashMap<>();
-
-
     public GrassField(int grassCount){
 
         //podstawowa wersja labu

@@ -18,9 +18,9 @@ public class Simulation {
         for (Vector2d position : positions) {
             try {
                 Animal animal = new Animal(position);
-                if (map.place(animal)) {
-                    this.animals.add(animal);
-                }
+                map.place(animal);
+                this.animals.add(animal);
+
             } catch (IncorrectPositionException e){
                 System.err.println(e.getMessage());
             }

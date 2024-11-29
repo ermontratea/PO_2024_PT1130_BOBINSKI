@@ -15,14 +15,13 @@ class SimulationTest {
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal(new Vector2d(2, 2));
         Animal animal2 = new Animal(new Vector2d(3, 3));
-
-
-        boolean placed1 = map.place(animal1);
-        boolean placed2 = map.place(animal2);
-
-
-        assertTrue(placed1, "Animal 1 placed correctly" );
-        assertTrue(placed2, "Animal 2 placed correctly");
+        try{
+            map.place(animal1);
+            map.place(animal2);
+        }
+        catch(IncorrectPositionException e){
+            System.out.println(e.getMessage());
+        }
         assertEquals(animal1, map.objectAt(new Vector2d(2, 2)), "Animal 1 should be at (2, 2)");
         assertEquals(animal2, map.objectAt(new Vector2d(3, 3)), "Animal 2 should be at (3, 3)");
     }

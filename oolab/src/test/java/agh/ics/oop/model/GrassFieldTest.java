@@ -13,10 +13,6 @@ public class GrassFieldTest {
         GrassField grassfield = new GrassField(10);
         Animal animal = new Animal(new Vector2d(5, 5));
 
-
-        boolean result = grassfield.place(animal);
-
-        assertTrue(result, "Animal should be placed successfully on a free position.");
         assertEquals(animal, grassfield.objectAt(new Vector2d(5, 5)));
     }
 
