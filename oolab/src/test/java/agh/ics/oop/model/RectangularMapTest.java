@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.util.MapVisualizer;
 import org.junit.jupiter.api.Test;
 
@@ -8,37 +9,33 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RectangularMapTest {
 
     @Test
-    void testPlaceAnimalOnFreePosition() {
+    void placeAnimalOnFreePosition() throws IncorrectPositionException {
 
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal = new Animal(new Vector2d(2, 2));
 
+        map.place(animal);
 
-        boolean result = map.place(animal);
-
-
-        assertTrue(result, "Animal should be placed successfully on an empty position.");
         assertEquals(animal, map.objectAt(new Vector2d(2, 2)));
     }
-
     @Test
-    void testPlaceAnimalOnOccupiedPosition() {
-
+    void testPlaceAnimalOnOccupiedPosition() throws IncorrectPositionException {
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal(new Vector2d(2, 2));
         Animal animal2 = new Animal(new Vector2d(2, 2));
         map.place(animal1);
 
-
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        Exception exception = assertThrows(
+                IncorrectPositionException.class,
                 () -> map.place(animal2),
                 "Placing an animal on an occupied position should throw an exception."
         );
-        assertEquals("Position (2, 2) is already occupied by an Animal.", exception.getMessage());
+        assertEquals("Position (2, 2) is not correct.", exception.getMessage());
     }
 
+
     @Test
-    void testMoveAnimalWithinBounds() {
+    void moveAnimalWithinBounds() throws IncorrectPositionException {
 
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal = new Animal(new Vector2d(2, 2));
@@ -52,7 +49,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    void testMoveAnimalOutOfBounds() {
+    void testMoveAnimalOutOfBounds() throws IncorrectPositionException {
 
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal = new Animal(new Vector2d(4, 4));
@@ -65,7 +62,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    void testIsOccupied() {
+    void isOccupied() throws IncorrectPositionException {
 
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal = new Animal(new Vector2d(2, 2));
@@ -77,7 +74,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    void testObjectAt() {
+    void objectAt() throws IncorrectPositionException {
 
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal = new Animal(new Vector2d(3, 3));

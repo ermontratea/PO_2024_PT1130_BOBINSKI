@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,20 +8,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GrassFieldTest {
 
     @Test
-    void testPlaceAnimalOnFreePosition() {
+    void testPlaceAnimalOnFreePosition() throws IncorrectPositionException {
 
         GrassField grassfield = new GrassField(10);
         Animal animal = new Animal(new Vector2d(5, 5));
 
-
-        boolean result = grassfield.place(animal);
-
-        assertTrue(result, "Animal should be placed successfully on a free position.");
         assertEquals(animal, grassfield.objectAt(new Vector2d(5, 5)));
     }
 
     @Test
-    void testPlaceAnimalOnOccupiedPosition() {
+    void testPlaceAnimalOnOccupiedPosition() throws IncorrectPositionException {
 
         GrassField grassfield = new GrassField(10);
         Animal animal1 = new Animal(new Vector2d(5, 5));
@@ -28,17 +25,17 @@ public class GrassFieldTest {
         grassfield.place(animal1);
 
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        Exception exception = assertThrows(IncorrectPositionException.class,
                 () -> grassfield.place(animal2),
                 "Placing an animal on an occupied position should throw an exception."
         );
-        assertEquals("Position (5, 5) is already occupied by an Animal.", exception.getMessage());
+        assertEquals("Position (5, 5) is not correct.", exception.getMessage());
     }
 
 
 
     @Test
-    void testIsOccupied() {
+    void testIsOccupied() throws IncorrectPositionException {
 
         GrassField grassfield = new GrassField(10);
         Animal animal = new Animal(new Vector2d(5, 5));
@@ -50,7 +47,7 @@ public class GrassFieldTest {
     }
 
     @Test
-    void testObjectAt() {
+    void testObjectAt() throws IncorrectPositionException {
 
         GrassField grassfield = new GrassField(10);
         Animal animal = new Animal(new Vector2d(5, 5));
