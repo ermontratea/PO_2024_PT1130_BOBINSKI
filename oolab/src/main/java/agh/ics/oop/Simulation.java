@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
-public class Simulation {
+public class Simulation implements Runnable {
     private final WorldMap map;
     private final List<Animal> animals;
     private final List<MoveDirection> directions;
@@ -23,6 +23,7 @@ public class Simulation {
 
             } catch (IncorrectPositionException e){
                 System.err.println(e.getMessage());
+
             }
         }
         this.map = map;
@@ -35,10 +36,8 @@ public class Simulation {
         return Collections.unmodifiableList(this.animals);
     }
     public void run() {
-        System.out.println(map);
         for(int i = 0; i < directions.size(); i++){
            map.move(animals.get(i % animals.size()), directions.get(i));
-
         }
    }
 }

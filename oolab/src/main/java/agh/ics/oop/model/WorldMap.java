@@ -11,7 +11,7 @@ import java.util.Collection;
  * @author apohllo, idzik
  */
 public interface WorldMap extends MoveValidator {
-
+    String getId();
     /**
      * Place an animal on the map.
      *

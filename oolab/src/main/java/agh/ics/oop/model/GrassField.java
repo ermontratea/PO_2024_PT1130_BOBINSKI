@@ -5,8 +5,8 @@ import java.util.*;
 
 public class GrassField extends AbstractWorldMap {
     private final Map<Vector2d, Grass> grass = new HashMap<>();
-    public GrassField(int grassCount){
-
+    public GrassField(String id, int grassCount){
+        super(id);
         //podstawowa wersja labu
 //        Random generator = new Random();
 //        while(grass.size() < grassCount){
@@ -24,6 +24,7 @@ public class GrassField extends AbstractWorldMap {
         }
 
     }
+
 
     @Override
     public boolean isOccupied(Vector2d position) {

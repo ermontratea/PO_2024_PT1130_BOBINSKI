@@ -12,7 +12,8 @@ public class RectangularMap extends AbstractWorldMap{
     private final Boundary mapBoundary;
 
 
-    public RectangularMap(int height, int width) {
+    public RectangularMap(String id, int height, int width) {
+        super(id);
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(width-1, height-1);
         this.mapBoundary = new Boundary(lowerLeft, upperRight);
@@ -23,6 +24,9 @@ public class RectangularMap extends AbstractWorldMap{
             throw new IncorrectPositionException(animal.getPosition());
         }
         animals.put(animal.getPosition(), animal);
+        synchronized (ConsoleMapDisplay.class) {
+            notifyObservers("Placed animal at position " + animal.getPosition());
+        }
 
     }
 
