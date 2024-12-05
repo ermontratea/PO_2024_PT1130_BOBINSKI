@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="agh.ics.oop.model.RectangularMapTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-11-21T02:43:33" hostname="LAPTOP-3O2HDAVR" time="0.023">
-  <properties/>
-  <testcase name="testPlaceAnimalOnFreePosition()" classname="agh.ics.oop.model.RectangularMapTest" time="0.023"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
