@@ -9,7 +9,7 @@ public abstract class AbstractWorldMap implements WorldMap{
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
     protected MapVisualizer visualizer = new MapVisualizer(this);
     protected final List<MapChangeListener> observers = new ArrayList<>();
-    protected final UUID id = UUID.randomUUID();
+    private final UUID id = UUID.randomUUID();
 
 
     @Override
