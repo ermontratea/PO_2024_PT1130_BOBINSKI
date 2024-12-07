@@ -10,7 +10,6 @@ public class SimulationEngine {
     private final ExecutorService threadPool = Executors.newFixedThreadPool(4);
     private final List<Simulation> simulations;
     private final List<Thread> threads = new ArrayList<>();
-    private static final Object LOCK = new Object();
 
     public SimulationEngine(List<Simulation> simulations) {
         this.simulations = simulations;
