@@ -9,6 +9,13 @@ public abstract class AbstractWorldMap implements WorldMap{
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
     protected MapVisualizer visualizer = new MapVisualizer(this);
     protected final List<MapChangeListener> observers = new ArrayList<>();
+    private final UUID id = UUID.randomUUID();
+
+
+    @Override
+    public UUID getId(){
+        return id;
+    }
 
     public void addObserver(MapChangeListener observer) {
         observers.add(observer);
@@ -29,7 +36,8 @@ public abstract class AbstractWorldMap implements WorldMap{
             throw new IncorrectPositionException(animal.getPosition());
         }
         animals.put(animal.getPosition(), animal);
-        notifyObservers("Placed an animal at position " + animal.getPosition());
+        notifyObservers("Placed animal at position " + animal.getPosition());
+
     }
     @Override
     public void move(Animal animal, MoveDirection direction) {
@@ -41,6 +49,8 @@ public abstract class AbstractWorldMap implements WorldMap{
             animals.remove(oldPosition);
             animals.put(newPosition, animal);
             notifyObservers("Moved an animal to position " + newPosition);
+
+
         }
     }
     @Override
