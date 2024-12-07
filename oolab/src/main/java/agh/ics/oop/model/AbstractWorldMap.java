@@ -9,16 +9,14 @@ public abstract class AbstractWorldMap implements WorldMap{
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
     protected MapVisualizer visualizer = new MapVisualizer(this);
     protected final List<MapChangeListener> observers = new ArrayList<>();
-    private final String id;
+    protected final UUID id = UUID.randomUUID();
 
-    public AbstractWorldMap(String id) {
-        this.id = id;
-    }
 
     @Override
-    public String getId() {
+    public UUID getId(){
         return id;
     }
+
     public void addObserver(MapChangeListener observer) {
         observers.add(observer);
     }
@@ -38,9 +36,8 @@ public abstract class AbstractWorldMap implements WorldMap{
             throw new IncorrectPositionException(animal.getPosition());
         }
         animals.put(animal.getPosition(), animal);
-        synchronized (ConsoleMapDisplay.class) {
-            notifyObservers("Placed animal at position " + animal.getPosition());
-        }
+        notifyObservers("Placed animal at position " + animal.getPosition());
+
     }
     @Override
     public void move(Animal animal, MoveDirection direction) {
@@ -51,9 +48,8 @@ public abstract class AbstractWorldMap implements WorldMap{
         if (!oldPosition.equals(newPosition)) {
             animals.remove(oldPosition);
             animals.put(newPosition, animal);
-            synchronized (ConsoleMapDisplay.class) {
-                notifyObservers("Moved an animal to position " + newPosition);
-            }
+            notifyObservers("Moved an animal to position " + newPosition);
+
 
         }
     }

@@ -13,7 +13,6 @@ public class RectangularMap extends AbstractWorldMap{
 
 
     public RectangularMap(String id, int height, int width) {
-        super(id);
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(width-1, height-1);
         this.mapBoundary = new Boundary(lowerLeft, upperRight);
