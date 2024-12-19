@@ -5,7 +5,7 @@ import java.util.*;
 
 public class GrassField extends AbstractWorldMap {
     private final Map<Vector2d, Grass> grass = new HashMap<>();
-    public GrassField(String id, int grassCount){
+    public GrassField(int grassCount){
 
         //podstawowa wersja labu
 //        Random generator = new Random();
