@@ -6,12 +6,9 @@ import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -48,7 +45,7 @@ public class SimulationPresenter implements MapChangeListener {
         this.map = map;
     }
 
-    public void xyLabel(){
+    public void labelConstruction(){
         mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
         mapGrid.getRowConstraints().add(new RowConstraints(height));
         Label label = new Label("y/x");
@@ -56,11 +53,12 @@ public class SimulationPresenter implements MapChangeListener {
         GridPane.setHalignment(label, HPos.CENTER);
     }
 
-    public void updateBounds(){
-        xMin = map.getCurrentBounds().lowerLeft().getX();
-        yMin = map.getCurrentBounds().lowerLeft().getY();
-        xMax = map.getCurrentBounds().upperRight().getX();
-        yMax = map.getCurrentBounds().upperRight().getY();
+    private void updateBounds(){
+        Boundary bounds = map.getCurrentBounds();
+        xMin = bounds.lowerLeft().getX();
+        yMin = bounds.lowerLeft().getY();
+        xMax = bounds.upperRight().getX();
+        yMax = bounds.upperRight().getY();
         mapWidth = xMax - xMin + 1;
         mapHeight = yMax - yMin + 1;
         width = Math.round(mapMaxWidth/mapWidth);
@@ -69,7 +67,7 @@ public class SimulationPresenter implements MapChangeListener {
         width = height;
     }
 
-    public void columnsFunction(){
+    public void columnsConstruction(){
         for(int i=0; i<mapWidth; i++){
             Label label = new Label(Integer.toString(i+xMin));
             GridPane.setHalignment(label, HPos.CENTER);
@@ -78,7 +76,7 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    public void rowsFunction(){
+    public void rowsConstruction(){
         for(int i=0; i<mapHeight; i++){
             Label label = new Label(Integer.toString(yMax-i));
             GridPane.setHalignment(label, HPos.CENTER);
@@ -104,9 +102,9 @@ public class SimulationPresenter implements MapChangeListener {
 
     private void drawMap() {
         updateBounds();
-        xyLabel();
-        columnsFunction();
-        rowsFunction();
+        labelConstruction();
+        columnsConstruction();
+        rowsConstruction();
         addElements();
         mapGrid.setGridLinesVisible(true);
     }
