@@ -12,7 +12,7 @@ public class RectangularMap extends AbstractWorldMap{
     private final Boundary mapBoundary;
 
 
-    public RectangularMap(String id, int height, int width) {
+    public RectangularMap(int height, int width) {
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(width-1, height-1);
         this.mapBoundary = new Boundary(lowerLeft, upperRight);

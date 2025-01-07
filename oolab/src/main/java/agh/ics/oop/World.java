@@ -1,5 +1,6 @@
 package agh.ics.oop;
 import agh.ics.oop.model.*;
+import javafx.application.Application;
 
 import java.util.*;
 
@@ -13,7 +14,7 @@ public class World {
             ArrayList<Simulation> simulations = new ArrayList<>();
 
             for (int i = 0; i < 1000; i++) {
-                GrassField grassFieldMap = new GrassField("GrassFieldMap" + i, 10);
+                GrassField grassFieldMap = new GrassField(10);
                 grassFieldMap.addObserver(new ConsoleMapDisplay());
                 Simulation simulation = new Simulation(positions, directions, grassFieldMap);
                 simulations.add(simulation);
