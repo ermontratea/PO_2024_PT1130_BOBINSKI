@@ -30,13 +30,14 @@ public class Simulation implements Runnable {
         return Collections.unmodifiableList(this.animals);
     }
     public void run(){
-        for(int i = 0; i < directions.size(); i++){
-           map.move(animals.get(i % animals.size()), directions.get(i));
-           try {
-               Thread.sleep(1000);
-           }catch (InterruptedException e){
-               System.err.println(e.getMessage());
-           }
+        try {
+            for (int i = 0; i < directions.size(); i++) {
+                map.move(animals.get(i % animals.size()), directions.get(i));
+
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
         }
    }
 }
