@@ -1,9 +1,9 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.trash.MoveDirection;
 
 import java.util.Collection;
-import java.util.UUID;
 
 /**
  * The interface responsible for interacting with the map of the world.
@@ -12,7 +12,7 @@ import java.util.UUID;
  * @author apohllo, idzik
  */
 public interface WorldMap extends MoveValidator {
-    UUID getId();
+//    UUID getId();
     /**
      * Place an animal on the map.
      *
