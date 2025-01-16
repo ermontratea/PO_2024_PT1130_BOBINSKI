@@ -1,9 +1,5 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.RectangularMap;
-import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.WorldMap;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,7 +8,6 @@ import javafx.stage.Stage;
 import agh.ics.oop.presenter.SimulationPresenter;
 
 import java.io.IOException;
-import java.util.List;
 
 public class SimulationApp extends Application {
     @Override
