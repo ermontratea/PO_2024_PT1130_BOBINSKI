@@ -11,6 +11,7 @@ public class Earth {
     private final List<Vector2d> graves = new ArrayList<>();
     private final List<Animal> animals = new ArrayList<>();
     protected final List<MapChangeListener> observers = new ArrayList<>();
+    Random random = new Random();
 
     public Earth(Boundary boundary) {
         this.boundary = boundary;
@@ -64,6 +65,42 @@ public class Earth {
             activeAnimals.put(where, animal);
         }
     }
+    public void plantGrass(int amountOfGrass, List<Vector2d> fertileLand, List<Vector2d> unfruitfulLand) {
+        int grassesOnFertile = 0 ;
+        int grassesOnUnfruitful = 0 ;
+        for (int i=1; i<amountOfGrass;i++){
+            int value=random.nextInt(5);
+            if (value != 0){
+                grassesOnFertile++;
+            }else grassesOnUnfruitful++;
+        }
+        Collections.shuffle(fertileLand);
+        Collections.shuffle(unfruitfulLand);
+        int[] result = fillWithGrass(fertileLand, 0, grassesOnFertile);
+        int currentFertileIndex = result[0];
+        int remainingGrass = result[1]+grassesOnUnfruitful;
+        int[] result1 = fillWithGrass(unfruitfulLand, 0, remainingGrass);
+        int stillRemainingGrass = result1[1];
+        int[] result2 = fillWithGrass(fertileLand, currentFertileIndex, stillRemainingGrass);
+    }
+    private int[] fillWithGrass(List<Vector2d> land,int startingIndex,int remainingGrass){
+        int currentIndex = startingIndex;
+        int grownGrasses=0;
+        while (currentIndex < land.size() && grownGrasses < remainingGrass){
+            if (grass.containsKey(land.get(currentIndex))){
+                currentIndex++;
+            }
+            else {
+                grass.put(land.get(currentIndex), new Grass(land.get(currentIndex)));
+                grownGrasses++;
+                currentIndex++;
+            }
+        }
+        remainingGrass-=grownGrasses;
+        return new int[] {currentIndex,remainingGrass};
+    }
+
+
 
     public boolean canMoveTo(Vector2d place) {
         return  (place.follows(boundary.lowerLeft()) && place.precedes(boundary.upperRight()));
