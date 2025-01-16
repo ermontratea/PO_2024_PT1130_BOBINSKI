@@ -11,10 +11,14 @@ public class Earth {
     private final List<Vector2d> graves = new ArrayList<>();
     private final List<Animal> animals = new ArrayList<>();
     protected final List<MapChangeListener> observers = new ArrayList<>();
+    private HashSet<Vector2d> fertileLand= new HashSet<>();
+    private HashSet<Vector2d> unfruitfulLand= new HashSet<>();
+    private int amountOfGrass;
     Random random = new Random();
 
-    public Earth(Boundary boundary) {
+    public Earth(Boundary boundary, int amountOfGrass) {
         this.boundary = boundary;
+        this.amountOfGrass = amountOfGrass;
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -65,7 +69,9 @@ public class Earth {
             activeAnimals.put(where, animal);
         }
     }
-    public void plantGrass(int amountOfGrass, List<Vector2d> fertileLand, List<Vector2d> unfruitfulLand) {
+    public void plantGrass() {
+        List<Vector2d> fertileLand = new ArrayList<>(this.fertileLand);
+        List<Vector2d> unfruitfulLand = new ArrayList<>(this.unfruitfulLand);
         int grassesOnFertile = 0 ;
         int grassesOnUnfruitful = 0 ;
         for (int i=1; i<amountOfGrass;i++){

@@ -1,4 +1,4 @@
-package agh.ics.oop.trash;
+package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
@@ -8,39 +8,18 @@ import java.util.List;
 import java.util.Collections;
 
 public class Simulation implements Runnable {
-    private final WorldMap map;
+    private final Earth map;
     private final List<Animal> animals;
-    private final List<MoveDirection> directions;
 
     public Simulation(int width, int height, int plantAmount, int energyFromPlant, int plantPerDay, boolean deadBody, int animalAmount, int energyToBreed, int energyToBirth, int minMutation, int maxMutation, boolean swap, int genLength) {
-
-
-
-        this.animals = new ArrayList<Animal>();
-
-        for (Vector2d position : positions) {
-            try {
-                Animal animal = new Animal(position);
-                map.place(animal);
-                this.animals.add(animal);
-
-            } catch (IncorrectPositionException e){
-                System.err.println(e.getMessage());
-
-            }
-        }
-        this.map = map;
-        this.directions = directions;
+        Boundary boundary = new Boundary(new Vector2d(0,0),new Vector2d(width-1,height-1));
+        this.map = new Earth(boundary, plantPerDay);
+        this.animals = new ArrayList<>();
 
     }
 
-
-    public List<Animal> getAnimals() {
-        return Collections.unmodifiableList(this.animals);
-    }
+    @Override
     public void run() {
-        for(int i = 0; i < directions.size(); i++){
-            map.move(animals.get(i % animals.size()));
-        }
+
     }
 }
