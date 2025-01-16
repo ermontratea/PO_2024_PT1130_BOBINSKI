@@ -103,6 +103,6 @@ public class Earth {
 
 
     public boolean canMoveTo(Vector2d place) {
-        return  (place.follows(boundary.lowerLeft()) && place.precedes(boundary.upperRight()));
+        return  (place.getY()<=boundary.upperRight().getY() && place.getY()>=0);
     }
 }
