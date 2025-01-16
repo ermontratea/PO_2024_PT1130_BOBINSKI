@@ -16,9 +16,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
                 allPositions.add(new Vector2d(x, y));
             }
         }
-
         Collections.shuffle(allPositions, new Random());
-
         this.positions = allPositions.subList(0, grassCount);
     }
 

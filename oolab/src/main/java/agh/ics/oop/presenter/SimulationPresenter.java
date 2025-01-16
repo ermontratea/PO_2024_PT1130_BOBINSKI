@@ -1,5 +1,6 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.model.trash.MoveDirection;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationApp;
 import agh.ics.oop.SimulationEngine;
@@ -17,10 +18,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 
-import static agh.ics.oop.OptionsParser.parse;
+import static agh.ics.oop.model.trash.OptionsParser.parse;
 
 public class SimulationPresenter implements MapChangeListener {
-    private WorldMap map;
+    private Earth map;
     @FXML
     private GridPane mapGrid;
     @FXML
@@ -41,7 +42,7 @@ public class SimulationPresenter implements MapChangeListener {
     private final int mapMaxHeight = 300;
     private final int mapMaxWidth = 300;
 
-    public void setWorldMap(WorldMap map) {
+    public void setWorldMap(Earth map) {
         this.map = map;
     }
 
@@ -53,19 +54,19 @@ public class SimulationPresenter implements MapChangeListener {
         GridPane.setHalignment(label, HPos.CENTER);
     }
 
-    private void updateBounds(){
-        Boundary bounds = map.getCurrentBounds();
-        xMin = bounds.lowerLeft().getX();
-        yMin = bounds.lowerLeft().getY();
-        xMax = bounds.upperRight().getX();
-        yMax = bounds.upperRight().getY();
-        mapWidth = xMax - xMin + 1;
-        mapHeight = yMax - yMin + 1;
-        width = Math.round(mapMaxWidth/mapWidth);
-        height = Math.round(mapMaxHeight/mapHeight);
-        height = Math.min(height, width);
-        width = height;
-    }
+//    private void updateBounds(){
+//        Boundary bounds = map.getCurrentBounds();
+//        xMin = bounds.lowerLeft().getX();
+//        yMin = bounds.lowerLeft().getY();
+//        xMax = bounds.upperRight().getX();
+//        yMax = bounds.upperRight().getY();
+//        mapWidth = xMax - xMin + 1;
+//        mapHeight = yMax - yMin + 1;
+//        width = Math.round(mapMaxWidth/mapWidth);
+//        height = Math.round(mapMaxHeight/mapHeight);
+//        height = Math.min(height, width);
+//        width = height;
+//    }
 
     public void columnsConstruction(){
         for(int i=0; i<mapWidth; i++){
@@ -101,7 +102,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void drawMap() {
-        updateBounds();
+//        updateBounds();
         labelConstruction();
         columnsConstruction();
         rowsConstruction();
@@ -116,7 +117,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @Override
-    public void mapChanged(WorldMap worldMap, String message) {
+    public void mapChanged(Earth worldMap, String message) {
         setWorldMap(worldMap);
         Platform.runLater(() -> {
             clearGrid();
@@ -130,7 +131,7 @@ public class SimulationPresenter implements MapChangeListener {
         String moveList = movesTextField.getText();
         List<MoveDirection> directions = parse(moveList.split(" "));
         List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
-        AbstractWorldMap map = new GrassField(10);
+        Earth map = new Earth();
         map.addObserver(this);
         Simulation simulation = new Simulation(positions, directions, map);
         SimulationEngine engine = new SimulationEngine(List.of(simulation));
