@@ -18,6 +18,11 @@ public class Animal implements WorldElement{
     private int children = 0;
     private int age = 0;
     private int[] genes;
+
+    public void addEnergy(int energy) {
+        this.energy += energy;
+    }
+
     private int energy;
     private int currentGene;
     private int energyToBreed;
@@ -73,7 +78,7 @@ public class Animal implements WorldElement{
 
     public Vector2d move(Earth map) {
         if (energy == 0) {
-            // map.die(this);
+            map.die(this);
         }
         int direction = genes[currentGene];
         Vector2d potentialNewPosition;
