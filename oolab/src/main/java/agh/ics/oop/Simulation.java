@@ -13,7 +13,7 @@ public class Simulation implements Runnable {
     private int plantPerDay;
 
     public Simulation(int width, int height, int plantAmount, int energyFromPlant, int plantPerDay, boolean deadBody, int animalAmount, int startingEnergy, int energyToBreed, int energyToBirth, int minMutation, int maxMutation, boolean swap, int genLength) {
-        this.map = new Earth(width,height, plantPerDay, plantAmount, animalAmount, genLength, startingEnergy, energyToBreed, energyToBirth, energyFromPlant);
+        this.map = new Earth(width,height, plantAmount, animalAmount, genLength, startingEnergy, energyToBreed, energyToBirth, energyFromPlant,deadBody);
         this.animals = new ArrayList<>();
         this.plantPerDay = plantPerDay;
     }

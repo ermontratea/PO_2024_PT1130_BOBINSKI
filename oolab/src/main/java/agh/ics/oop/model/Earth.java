@@ -13,21 +13,28 @@ public class Earth {
     protected final List<MapChangeListener> observers = new ArrayList<>();
     private final HashSet<Vector2d> fertileLand= new HashSet<>();
     private final HashSet<Vector2d> unfruitfulLand= new HashSet<>();
-    private int plantPerDay;
     private int energyFromPlant;
     Random random = new Random();
 
-    public Earth(int width, int height, int plantPerDay, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToBreed, int energyToBirth, int energyFromPlant) {
+    public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToBreed, int energyToBirth, int energyFromPlant, boolean deadBody) {
         this.boundary = new Boundary(new Vector2d(0,0), new Vector2d(width-1,height-1));
-        this.plantPerDay = plantPerDay;
-        for (int i=0; i<width;i++){
-            fertileLand.add(new Vector2d(i,height/2));
-        }
-        for (int j=0; j<height;j++){
-            if (j!=height/2) {
+        if (!deadBody) {
+            for (int i = 0; i < width; i++) {
+                fertileLand.add(new Vector2d(i, height / 2));
+            }
+            for (int j = 0; j < height; j++) {
+                if (j != height / 2) {
+                    for (int i = 0; i < width; i++) {
+                        unfruitfulLand.add(new Vector2d(i, j));
+                    }
+                }
+            }
+        }else{
+            for (int j = 0; j < height; j++) {
                 for (int i = 0; i < width; i++) {
                     unfruitfulLand.add(new Vector2d(i, j));
                 }
+
             }
         }
         this.energyFromPlant = energyFromPlant;
@@ -61,6 +68,7 @@ public class Earth {
             Animal animal = iterator.next();
             this.move(animal);
             if (this.isDead(animal)) {  // Jeśli zwierzę umarło
+                graves.add(animal.getPosition());
                 iterator.remove();  // Bezpieczne usunięcie elementu
             }
         }
@@ -157,10 +165,29 @@ public class Earth {
     public boolean canMoveTo(Vector2d place) {
         return  (place.getY()<=boundary.upperRight().getY() && place.getY()>=0);
     }
+
     public void clearLists(){
         eventGrass.clear();
         graves.clear();
         activeAnimals.clear();
         weakerActiveAnimals.clear();
+        ///DO NAPISANIA jeśli deadBody : unfruitful znów wszystkie pola a fertile żadne
     }
+    ///DO NAPISANIA - może jednak zrobić enuma mapdirections
+    public void fertileNearBodies(){
+        Vector2d NORTH = new Vector2d(0,1);
+        Vector2d EAST = new Vector2d(1,0);
+        Vector2d SOUTH = new Vector2d(0,-1);
+        Vector2d WEST = new Vector2d(-1,0);
+        Vector2d NORTH_EAST = new Vector2d(1,1);
+        Vector2d NORTH_WEST = new Vector2d(-1,1);
+        Vector2d SOUTH_EAST = new Vector2d(1,-1);
+        Vector2d SOUTH_WEST = new Vector2d(-1,-1);
+        for (Vector2d vector : graves){
+            if (unfruitfulLand.contains(vector.add(NORTH))){
+            unfruitfulLand.remove(vector.add(NORTH));}
+            // itp itd
+        }
+    }
+
 }

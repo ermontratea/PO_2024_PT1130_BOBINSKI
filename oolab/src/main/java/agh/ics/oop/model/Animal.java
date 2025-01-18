@@ -1,4 +1,6 @@
 package agh.ics.oop.model;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -15,18 +17,20 @@ public class Animal implements WorldElement{
     Random random = new Random();
     private int direction;
     private Vector2d position;
-    private int children = 0;
     private int age = 0;
     private int[] genes;
+    private List<Animal> children = new ArrayList<>();
+        private int energy;
+    private int currentGene;
+    private int energyToBreed;
+    private int energyToBirth;
 
     public void addEnergy(int energy) {
         this.energy += energy;
     }
-
-    private int energy;
-    private int currentGene;
-    private int energyToBreed;
-    private int energyToBirth;
+    public List<Animal> getKids() {
+        return this.children;
+    }
 
     public Animal(Vector2d position, int geneLength, int startingEnergy, int energyToBreed, int energyToBirth){
         this.energyToBreed = energyToBreed;
