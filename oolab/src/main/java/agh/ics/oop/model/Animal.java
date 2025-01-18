@@ -28,9 +28,6 @@ public class Animal implements WorldElement{
     public void addEnergy(int energy) {
         this.energy += energy;
     }
-    public List<Animal> getKids() {
-        return this.children;
-    }
 
     public Animal(Vector2d position, int geneLength, int startingEnergy, int energyToBreed, int energyToBirth){
         this.energyToBreed = energyToBreed;
@@ -55,8 +52,8 @@ public class Animal implements WorldElement{
     public int getAge() {
         return age;
     }
-    public int getChildren() {
-        return children;
+    public List<Animal> getChildren() {
+        return this.children;
     }
 
 
