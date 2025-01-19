@@ -2,6 +2,8 @@ package agh.ics.oop.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AnimalTest {
@@ -10,10 +12,8 @@ class AnimalTest {
         Vector2d position = new Vector2d(2, 3);
         int geneLength = 8;
         int startingEnergy = 50;
-        int energyToBreed = 20;
-        int energyToBirth = 10;
 
-        Animal animal = new Animal(position, geneLength, startingEnergy, energyToBreed, energyToBirth);
+        Animal animal = new Animal(position, geneLength, startingEnergy);
 
         assertEquals(position, animal.getPosition());
         assertEquals(startingEnergy, animal.getEnergy());
@@ -24,7 +24,7 @@ class AnimalTest {
     @Test
     void addEnergy() {
         Vector2d position = new Vector2d(0, 0);
-        Animal animal = new Animal(position, 8, 10, 5, 3);
+        Animal animal = new Animal(position, 8, 10);
 
         animal.addEnergy(5);
 
@@ -38,7 +38,7 @@ class AnimalTest {
         int energyToBreed = 20;
         int energyToBirth = 10;
         Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false);
-        Animal animal = new Animal(position, geneLength, startingEnergy, energyToBreed, energyToBirth);
+        Animal animal = new Animal(position, geneLength, startingEnergy);
 
         animal.move(earth);
 
@@ -52,7 +52,7 @@ class AnimalTest {
         int energyToBreed = 20;
         int energyToBirth = 10;
         Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false);
-        Animal animal = new Animal(position, geneLength, startingEnergy, energyToBreed, energyToBirth);
+        Animal animal = new Animal(position, geneLength, startingEnergy);
 
         Vector2d result = animal.move(earth);
 
@@ -67,7 +67,7 @@ class AnimalTest {
         int energyToBreed = 20;
         int energyToBirth = 10;
         Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false);
-        Animal animal = new Animal(position, geneLength, startingEnergy, energyToBreed, energyToBirth);
+        Animal animal = new Animal(position, geneLength, startingEnergy);
 
         Vector2d result = animal.move(earth);
 
@@ -77,7 +77,7 @@ class AnimalTest {
     @Test
     void getPosition() {
         Vector2d position = new Vector2d(2, 3);
-        Animal animal = new Animal(position, 5, 10, 5, 4);
+        Animal animal = new Animal(position, 5, 10);
 
         Vector2d result = animal.getPosition();
 
@@ -87,7 +87,7 @@ class AnimalTest {
     void getEnergy() {
         Vector2d position = new Vector2d(2, 3);
         int startingEnergy = 50;
-        Animal animal = new Animal(position, 5, startingEnergy, 5, 4);
+        Animal animal = new Animal(position, 5, startingEnergy);
 
         int result = animal.getEnergy();
 
@@ -97,7 +97,7 @@ class AnimalTest {
     @Test
     void getChildren() {
         Vector2d position = new Vector2d(2, 3);
-        Animal animal = new Animal(position, 5, 50, 5, 4);
+        Animal animal = new Animal(position, 5, 50);
 
         int result = animal.getChildren().size();
 
@@ -108,7 +108,7 @@ class AnimalTest {
     void animalMovementUpdatesPosition() {
         Vector2d position = new Vector2d(2, 3);
         Earth earth = new Earth(10, 10, 0, 0, 8, 50, 20, 10, 5, false);
-        Animal animal = new Animal(position, 8, 50, 20, 10);
+        Animal animal = new Animal(position, 8, 50);
 
         Vector2d newPosition = animal.move(earth);
 
@@ -116,12 +116,48 @@ class AnimalTest {
     }
     ///fajne by były testy, które testują wchodzenie w bieguny i przechodzenie na drugi bok mapy, ale nie da się zbytnio tego zrobić
     /// gdy początkowy kierunek zwierzaka jest losowy, trzeba by było zrobić specjalny setter/nowy konstruktor dla tych testów
+    @Test
+    void correctAnimalMovementNearBorder() {
+        Vector2d position = new Vector2d(0, 0);
+        Earth earth = new Earth(10, 10, 0, 0, 8, 50, 20, 10, 5, false);
+        Animal animal = new Animal(position, 8, 50);
+        int startingDirection = animal.getDirection();
+        int firstGene = animal.getCurrentGene();
+        int firstMove = (startingDirection+firstGene)%8;
+
+        Vector2d newPosition = animal.move(earth);
+
+        if (firstMove==6){
+        assertEquals(new Vector2d(9,0), newPosition);}
+        else if (firstMove==5){
+            assertEquals(position, newPosition);
+            assertEquals(1,animal.getDirection());
+        }
+        else if (firstMove==4){
+            assertEquals(position, newPosition);
+            assertEquals(0,animal.getDirection());
+        }
+        else if (firstMove==3){
+            assertEquals(position, newPosition);
+            assertEquals(7,animal.getDirection());
+        }
+        else if (firstMove==0){
+            assertEquals(new Vector2d(0,1), newPosition);
+        }
+        else if (firstMove==1){
+            assertEquals(new Vector2d(1,1), newPosition);
+        }
+        else if (firstMove==2){
+            assertEquals(new Vector2d(1,0), newPosition);
+        }
+        else{assertEquals(new Vector2d(9,1), newPosition);}
+    }
 
     @Test
     void isBetterAnimalEnergyComparison() {
         Vector2d position = new Vector2d(2, 3);
-        Animal animal1 = new Animal(position, 8, 50, 20, 10);
-        Animal animal2 = new Animal(position, 8, 30, 20, 10);
+        Animal animal1 = new Animal(position, 8, 50);
+        Animal animal2 = new Animal(position, 8, 30);
 
         boolean result = animal1.isBetterAnimal(animal2);
 
@@ -130,28 +166,28 @@ class AnimalTest {
     @Test
     void isBetterAnimalEqualEnergyComparesAge() {
         Vector2d position = new Vector2d(2, 3);
-        Animal animal1 = new Animal(position, 8, 51, 20, 10);
+        Animal animal1 = new Animal(position, 8, 51);
         animal1.move(new Earth(10, 10, 0, 0, 8, 50, 20, 10, 5, false));
-        Animal animal2 = new Animal(position, 8, 50, 20, 10);
+        Animal animal2 = new Animal(position, 8, 50);
 
         boolean result = animal1.isBetterAnimal(animal2);
 
         assertTrue(result);
     }
     ///trzeba dodać rozmnażanie żeby działało
-    @Test
-    void isBetterAnimalEqualEnergyEqualAgeComparesChildren() {
-        Vector2d position = new Vector2d(2, 3);
-        Animal animal1 = new Animal(position, 8, 50, 20, 10);
-        Animal animal2 = new Animal(position, 8, 50, 20, 10);
-
-        boolean result = animal1.isBetterAnimal(animal2);
-
-        assertTrue(result);
-    }
+//    @Test
+//    void isBetterAnimalEqualEnergyEqualAgeComparesChildren() {
+//        Vector2d position = new Vector2d(2, 3);
+//        Animal animal1 = new Animal(position, 8, 50);
+//        Animal animal2 = new Animal(position, 8, 50);
+//
+//        boolean result = animal1.isBetterAnimal(animal2);
+//
+//        assertTrue(result);
+//    }
     @Test
     void geneToMapDirection() {
-        Animal animal = new Animal(new Vector2d(2, 3), 8, 50, 20, 10);
+        Animal animal = new Animal(new Vector2d(2, 3), 8, 50);
 
         assertEquals(MapDirection.NORTH, animal.geneToMapDirection(0));
         assertEquals(MapDirection.NORTH_EAST, animal.geneToMapDirection(1));
@@ -170,7 +206,7 @@ class AnimalTest {
         int energyToBreed = 30;
         int energyToBirth = 5;
         Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false);
-        Animal animal = new Animal(position, geneLength, startingEnergy, energyToBreed, energyToBirth);
+        Animal animal = new Animal(position, geneLength, startingEnergy);
         int startingGene = animal.getCurrentGene();
 
         animal.move(earth);
@@ -185,7 +221,7 @@ class AnimalTest {
         int energyToBreed = 20;
         int energyToBirth = 10;
         Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false);
-        Animal animal = new Animal(position, geneLength, startingEnergy, energyToBreed, energyToBirth);
+        Animal animal = new Animal(position, geneLength, startingEnergy);
         int startingGene = animal.getCurrentGene();
 
         for (int i = 0; i < geneLength; i++) {

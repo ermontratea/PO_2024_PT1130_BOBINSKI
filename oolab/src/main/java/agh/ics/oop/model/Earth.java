@@ -68,6 +68,7 @@ public class Earth {
         for (int i = 0; i < geneLength; i++) {
             allGenesSecondary.add(i);
         }
+        this.geneLength = geneLength;
     }
     public int[] sex(Animal father, Animal mother) {
         if (mother.getEnergy() >= energyToHealthy) {
@@ -282,19 +283,26 @@ public class Earth {
 //            // itp itd
         }
     }
-    public Set getFertileLand(){
+    public Set<Vector2d> getFertileLand(){
         return fertileLand;
     }
-    public Set getUnfruitfulLand(){
+    public Set<Vector2d> getUnfruitfulLand(){
         return unfruitfulLand;
     }
-    public Map getGrass(){
+    public Map<Vector2d,Grass> getGrass(){
         return grass;
     }
-    public Set getAnimals(){
+    public Set<Animal> getAnimals(){
         return animals;
     }
-    public Set getGraves(){
+    public Set<Vector2d> getGraves(){
         return graves;
     }
+    public Map<Vector2d,Animal> getEventGrass(){
+        return eventGrass;
+    }
+    public Map<Vector2d,Animal> getActiveAnimals(){
+        return activeAnimals;
+    }
+
 }
