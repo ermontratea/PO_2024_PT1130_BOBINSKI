@@ -14,17 +14,14 @@ public class Animal implements WorldElement{
     private int[] genes;
     private int energy;
     private int currentGene;
-    ///te rzeczy też lepiej przechowywać gdzie indziej
-    private int energyToBreed;
-    private int energyToBirth;
 
     public void addEnergy(int energy) {
         this.energy += energy;
     }
-
-    public Animal(Vector2d position, int geneLength, int startingEnergy, int energyToBreed, int energyToBirth) {
-        this.energyToBreed = energyToBreed;
-        this.energyToBirth = energyToBirth;
+    public int[] getGenes() {
+        return genes;
+    }
+    public Animal(Vector2d position, int geneLength, int startingEnergy) {
         this.direction = random.nextInt(8);
         this.position = position;
         genes = new int[geneLength];
@@ -36,9 +33,7 @@ public class Animal implements WorldElement{
     }
 
 
-    public Animal(Vector2d position, int geneLength, int startingEnergy, int[] genes, int energyToBreed, int energyToBirth) {
-        this.energyToBreed = energyToBreed;
-        this.energyToBirth = energyToBirth;
+    public Animal(Vector2d position, int geneLength, int startingEnergy, int[] genes) {
         this.direction = random.nextInt(8);
         this.position = position;
         this.genes = genes;
@@ -53,9 +48,11 @@ public class Animal implements WorldElement{
     public int getEnergy(){
         return this.energy;
     }
-
     public int getCurrentGene() {
         return currentGene;
+    }
+    public int getGene(){
+        return genes[currentGene];
     }
 
     public int getAge() {

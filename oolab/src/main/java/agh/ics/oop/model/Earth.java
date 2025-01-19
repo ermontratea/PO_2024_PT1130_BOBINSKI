@@ -12,15 +12,18 @@ public class Earth {
     private final Set<Vector2d> graves = new HashSet<>();
     private final HashSet<Vector2d> fertileLand= new HashSet<>();
     private final HashSet<Vector2d> unfruitfulLand= new HashSet<>();
-    private int startingEnergy;
     private int geneLength;
+    private List<Integer> allGenes;
+    private List<Integer> allGenesSecondary;
+    private int energyToHealthy;
+    private int energyToBirth;
     private int energyFromPlant;
     protected final List<MapChangeListener> observers = new ArrayList<>();
     Random random = new Random();
 
 
 
-    public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToBreed, int energyToBirth, int energyFromPlant, boolean deadBody) {
+    public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToHealthy, int energyToBirth, int energyFromPlant, boolean deadBody) {
         this.boundary = new Boundary(new Vector2d(0,0), new Vector2d(width-1,height-1));
         if (!deadBody) {
             int equatorSizeHalf = height / 10;
@@ -53,12 +56,78 @@ public class Earth {
         this.energyFromPlant = energyFromPlant;
         fillEarthWithPlants(plantAmount);
         for (int i=0; i<animalAmount; i++) {
-            animals.add(new Animal(new Vector2d(random.nextInt(width), random.nextInt(height)),geneLength,startingEnergy,energyToBreed,energyToBirth));
+            animals.add(new Animal(new Vector2d(random.nextInt(width), random.nextInt(height)),geneLength,startingEnergy));
+        }
+        this.energyToHealthy = energyToHealthy;
+        this.energyToBirth = energyToBirth;
+        allGenes = new ArrayList<>();
+        for (int i = 0; i < geneLength; i++) {
+            allGenes.add(i);
+        }
+        allGenesSecondary = new ArrayList<>();
+        for (int i = 0; i < geneLength; i++) {
+            allGenesSecondary.add(i);
+        }
+    }
+    public int[] sex(Animal father, Animal mother) {
+        if (mother.getEnergy() >= energyToHealthy) {
+            int genesFromFather = (geneLength * father.getEnergy()) / (father.getEnergy() + mother.getEnergy());
+            int[] newbornGenes = new int[geneLength];
+            int[] fatherGenes = father.getGenes();
+            int[] motherGenes = mother.getGenes();
+            if (random.nextBoolean()) {
+                for (int i = 0; i < genesFromFather; i++) {
+                    newbornGenes[i] = fatherGenes[i];
+                }
+                for (int i = genesFromFather; i < geneLength; i++) {
+                    newbornGenes[i] = motherGenes[i];
+                }
+            } else {
+                for (int i = geneLength - 1; i > (geneLength - genesFromFather - 1); i--) {
+                    newbornGenes[i] = fatherGenes[i];
+                }
+                for (int i = (geneLength - genesFromFather - 1); i > -1; i--) {
+                    newbornGenes[i] = motherGenes[i];
+                }
+            }
+            return newbornGenes;
+        }
+        return null;
+    }
+
+    // sex
+    public void sexRandomMutation(Animal father, Animal mother) {
+        int[] newbornGenes = sex(father, mother);
+        if (newbornGenes != null) {
+            int amountOfMutation = random.nextInt(geneLength + 1);
+            Collections.shuffle(allGenes);
+            for (int i = 0; i < amountOfMutation; i++) {
+                newbornGenes[allGenes.get(i)] = random.nextInt(10);
+            }
+            Animal newborn = new Animal(father.getPosition(), geneLength, 2*energyToBirth, newbornGenes);
+            animals.add(newborn);
+            mother.addEnergy( -energyToBirth );
+            father.addEnergy( -energyToBirth );
         }
     }
 
-    public void plantGrass(int amountOfGlass, List<Vector2d> fertileLand, List<Vector2d> unfruitfulLand) {
-
+    // sex
+    public void sexSwap(Animal father, Animal mother) {
+        int[] newbornGenes = sex(father, mother);
+        if (newbornGenes != null) {
+            int amountOfMutation = random.nextInt(geneLength + 1);
+            Collections.shuffle(allGenes);
+            Collections.shuffle(allGenesSecondary);
+            for (int i = 0; i < amountOfMutation; i++) {
+                int firstGene = newbornGenes[allGenes.get(i)];
+                newbornGenes[allGenes.get(i)] = newbornGenes[allGenesSecondary.get(i)];
+                newbornGenes[allGenesSecondary.get(i)] = firstGene;
+            }
+            Animal newborn = new Animal(father.getPosition(), geneLength, 2*energyToBirth, newbornGenes);
+            animals.add(newborn);
+            mother.addEnergy( -energyToBirth );
+            father.addEnergy( -energyToBirth );
+        }
     }
 
     //rusza wszystkie zwierzęta na mapie
@@ -73,14 +142,6 @@ public class Earth {
             }
         }
     }
-
-//    //public void createAnimal(Vector2d where) {
-//        Animal newborn = new Animal(where, geneLength, startingEnergy);
-//    }
-
-//    public void sex(Animal father, Animal mother) {
-//
-//    }
 
     public void move(Animal animal) {
         Vector2d where = animal.move(this);
@@ -154,7 +215,7 @@ public class Earth {
         List<Vector2d> unfruitfulLand = new ArrayList<>(this.unfruitfulLand);
         int plantsOnFertile = 0 ;
         int plantsOnUnfruitful = 0 ;
-        for (int i = 1; i< plantAmount; i++){
+        for (int i = 1; i<= plantAmount; i++){
             int value=random.nextInt(5);
             if (value != 0){
                 plantsOnFertile++;
@@ -220,5 +281,20 @@ public class Earth {
 //            unfruitfulLand.remove(vector.add(NORTH));}
 //            // itp itd
         }
+    }
+    public Set getFertileLand(){
+        return fertileLand;
+    }
+    public Set getUnfruitfulLand(){
+        return unfruitfulLand;
+    }
+    public Map getGrass(){
+        return grass;
+    }
+    public Set getAnimals(){
+        return animals;
+    }
+    public Set getGraves(){
+        return graves;
     }
 }
