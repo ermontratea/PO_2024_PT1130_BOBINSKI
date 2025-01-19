@@ -53,6 +53,11 @@ public class Animal implements WorldElement{
     public int getEnergy(){
         return this.energy;
     }
+
+    public int getCurrentGene() {
+        return currentGene;
+    }
+
     public int getAge() {
         return age;
     }
@@ -74,8 +79,9 @@ public class Animal implements WorldElement{
         potentialNewPosition = map.moveAroundEarth(potentialNewPosition);
         if (map.canMoveTo(potentialNewPosition)) {
             this.position = potentialNewPosition;
-        }
+        }else{this.direction = (this.direction+4)%8;}
         energy--;
+        age++;
         currentGene=(currentGene+1)%genes.length;
         return this.position;
     }

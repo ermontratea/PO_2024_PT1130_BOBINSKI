@@ -22,16 +22,24 @@ public class Earth {
 
     public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToBreed, int energyToBirth, int energyFromPlant, boolean deadBody) {
         this.boundary = new Boundary(new Vector2d(0,0), new Vector2d(width-1,height-1));
-        ///zmienić że równik ma mieć 20% grubości
         if (!deadBody) {
-            for (int i = 0; i < width; i++) {
-                fertileLand.add(new Vector2d(i, height / 2));
+            int equatorSizeHalf = height / 10;
+            int center = height / 2;
+            int equatorStart = center - equatorSizeHalf;
+            int equatorEnd = center + equatorSizeHalf;
+            for (int j = 0; j < equatorStart; j++) {
+                for (int i = 0; i < width; i++) {
+                    unfruitfulLand.add(new Vector2d(i, j));
+                }
             }
-            for (int j = 0; j < height; j++) {
-                if (j != height / 2) {
-                    for (int i = 0; i < width; i++) {
-                        unfruitfulLand.add(new Vector2d(i, j));
-                    }
+            for (int j = equatorStart; j < equatorEnd; j++) {
+                for (int i = 0; i < width; i++) {
+                    fertileLand.add(new Vector2d(i, j));
+                }
+            }
+            for (int j = equatorEnd; j < height; j++) {
+                for (int i = 0; i < width; i++) {
+                    unfruitfulLand.add(new Vector2d(i, j));
                 }
             }
         }else{
