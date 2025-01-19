@@ -54,20 +54,6 @@ public class SimulationPresenter implements MapChangeListener {
         GridPane.setHalignment(label, HPos.CENTER);
     }
 
-//    private void updateBounds(){
-//        Boundary bounds = map.getCurrentBounds();
-//        xMin = bounds.lowerLeft().getX();
-//        yMin = bounds.lowerLeft().getY();
-//        xMax = bounds.upperRight().getX();
-//        yMax = bounds.upperRight().getY();
-//        mapWidth = xMax - xMin + 1;
-//        mapHeight = yMax - yMin + 1;
-//        width = Math.round(mapMaxWidth/mapWidth);
-//        height = Math.round(mapMaxHeight/mapHeight);
-//        height = Math.min(height, width);
-//        width = height;
-//    }
-
     public void columnsConstruction(){
         for(int i=0; i<mapWidth; i++){
             Label label = new Label(Integer.toString(i+xMin));
@@ -90,20 +76,19 @@ public class SimulationPresenter implements MapChangeListener {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Vector2d pos = new Vector2d(i, j);
-//                if (map.isOccupied(pos)) {
-//                    mapGrid.add(new Label(map.objectAt(pos).toString()), i - xMin + 1, yMax - j + 1);
-//                }
-//                else {
-//                    mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
-//                }
-                mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
+                if (map.isOccupied(pos)) {
+                    mapGrid.add(new Label(map.objectAt(pos).toString()), i - xMin + 1, yMax - j + 1);
+                }
+                else {
+                    mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
+                }
+
                 mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
             }
         }
     }
 
     private void drawMap() {
-//        updateBounds();
         labelConstruction();
         columnsConstruction();
         rowsConstruction();
@@ -139,6 +124,7 @@ public class SimulationPresenter implements MapChangeListener {
         new Thread(() -> {
             engine.runSync();
         }).start();
+
     }
 
     @FXML

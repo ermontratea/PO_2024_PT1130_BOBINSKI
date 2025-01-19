@@ -22,20 +22,25 @@ public class Simulation implements Runnable {
     public void run() {
         int day =1;
         while (day<101) {
-            //1. umieranie i ruszanie zwierzaków (tworzenie się list eventGrass i activeAnimals, weakerActiveAnimals)
-            map.moveAllAnimals();
-            ///2. (ew) zmienianie się żyznych pól przy martwych zwierzakach
+            try {
+                //1. umieranie i ruszanie zwierzaków (tworzenie się list eventGrass i activeAnimals, weakerActiveAnimals)
+                map.moveAllAnimals();
+                ///2. (ew) zmienianie się żyznych pól przy martwych zwierzakach
 
-            //3. jedzenie roślin
-            map.dinner();
-            ///4. rozmnażanie się zwierząt
+                //3. jedzenie roślin
+                map.dinner();
+                ///4. rozmnażanie się zwierząt
 
-            // 5. rośnięcie roślin
-            map.fillEarthWithPlants(plantPerDay);
-            // 6. clearowanie wszystkich list z eventami, a także chyba grobów (chyba że zostają na kilka dni)
-            map.clearLists();
-            //koniec dnia
-            day++;
+                // 5. rośnięcie roślin
+                map.fillEarthWithPlants(plantPerDay);
+                // 6. clearowanie wszystkich list z eventami, a także chyba grobów (chyba że zostają na kilka dni)
+                map.clearLists();
+                Thread.sleep(1000);
+                //koniec dnia
+                day++;
+            }catch (InterruptedException e){
+                System.err.print(e.getMessage());
+            }
         }
     }
 }

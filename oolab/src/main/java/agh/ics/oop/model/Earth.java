@@ -18,6 +18,9 @@ public class Earth {
     private int energyToHealthy;
     private int energyToBirth;
     private int energyFromPlant;
+    private int fertileArea;
+    private List<Vector2d> graveArea;
+
     protected final List<MapChangeListener> observers = new ArrayList<>();
     Random random = new Random();
 
@@ -69,6 +72,10 @@ public class Earth {
             allGenesSecondary.add(i);
         }
         this.geneLength = geneLength;
+        fertileArea = (width * height) / 5;
+        for (MapDirection direction : MapDirection.values()) {
+            graveArea.add(direction.toUnitVector());
+        }
     }
     public int[] sex(Animal father, Animal mother) {
         if (mother.getEnergy() >= energyToHealthy) {
@@ -142,6 +149,7 @@ public class Earth {
                 iterator.remove();  // Bezpieczne usunięcie elementu
             }
         }
+        notifyObservers("Zwierzaki się ruszyły");
     }
 
     public void move(Animal animal) {
@@ -268,21 +276,40 @@ public class Earth {
     }
     ///DO NAPISANIA - może jednak zrobić enuma mapdirections
 
-    public void fertileNearBodies(){
-        for (Vector2d vector : graves){
-            for (MapDirection direction : MapDirection.values()){
-                Vector2d position = vector.add(direction.toUnitVector());
-                if(canMoveTo(position)){
-                    if(!fertileLand.contains(position)){
-
-                    }
-                }
+    public void fertileNearBodies() {
+        unfruitfulLand.addAll(fertileLand);
+        fertileLand.clear();
+        // zaokrąglanie w góre
+        int landPerGrave = (fertileArea + graves.size() - 1) / graves.size();
+        landPerGrave = Math.min(9, landPerGrave);
+        for (Vector2d grave : graves) {
+            Collections.shuffle(graveArea);
+            for (int i = 0; i < landPerGrave; i++) {
+                fertileLand.add(grave.add(graveArea.get(i)));
             }
-//            if (unfruitfulLand.contains(vector.add(NORTH))){
-//            unfruitfulLand.remove(vector.add(NORTH));}
-//            // itp itd
+        }
+        unfruitfulLand.removeAll(fertileLand);
+    }
+    public boolean isOccupied(Vector2d position){
+        if (grass.containsKey(position)){
+            return true;
+        }else{
+            if(activeAnimals.containsKey(position)){
+                return true;
+            }
+            else{return false;}
         }
     }
+    public WorldElement objectAt(Vector2d position){
+        if (isOccupied(position)){
+            if (activeAnimals.containsKey(position)){
+                return activeAnimals.get(position);
+            }
+            else{return grass.get(position);}
+        }
+        else{return null;}
+    }
+
     public Set<Vector2d> getFertileLand(){
         return fertileLand;
     }

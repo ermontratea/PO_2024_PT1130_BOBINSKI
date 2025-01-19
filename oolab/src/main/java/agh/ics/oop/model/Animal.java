@@ -111,4 +111,7 @@ public class Animal implements WorldElement{
             default -> throw new IllegalStateException("Unexpected value: " + direction);
         };
     }
+    public String toString(){
+        return "A";
+    }
 }
