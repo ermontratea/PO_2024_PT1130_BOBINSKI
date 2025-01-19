@@ -8,16 +8,21 @@ public class Earth {
     private final Map<Vector2d, Animal> eventGrass = new HashMap<>();
     private final Map<Vector2d, Animal> activeAnimals = new HashMap<>();
     private final Map<Vector2d, Animal> weakerActiveAnimals = new HashMap<>();
-    private final HashSet<Vector2d> graves = new HashSet<>();
-    private final HashSet<Animal> animals = new HashSet<>();
-    protected final List<MapChangeListener> observers = new ArrayList<>();
+    private final Set<Animal> animals = new HashSet<>();
+    private final Set<Vector2d> graves = new HashSet<>();
     private final HashSet<Vector2d> fertileLand= new HashSet<>();
     private final HashSet<Vector2d> unfruitfulLand= new HashSet<>();
-    private final int energyFromPlant;
+    private int startingEnergy;
+    private int geneLength;
+    private int energyFromPlant;
+    protected final List<MapChangeListener> observers = new ArrayList<>();
     Random random = new Random();
+
+
 
     public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToBreed, int energyToBirth, int energyFromPlant, boolean deadBody) {
         this.boundary = new Boundary(new Vector2d(0,0), new Vector2d(width-1,height-1));
+        ///zmienić że równik ma mieć 20% grubości
         if (!deadBody) {
             for (int i = 0; i < width; i++) {
                 fertileLand.add(new Vector2d(i, height / 2));
@@ -44,43 +49,34 @@ public class Earth {
         }
     }
 
-    public void addObserver(MapChangeListener observer) {
-        observers.add(observer);
+    public void plantGrass(int amountOfGlass, List<Vector2d> fertileLand, List<Vector2d> unfruitfulLand) {
+
     }
 
-    public void removeObserver(MapChangeListener observer) {
-        observers.remove(observer);
-    }
-
-    protected void notifyObservers(String message) {
-        for (MapChangeListener observer : observers) {
-            observer.mapChanged(this, message);
-        }
-    }
-    //sprawdza czy zwierzę jest martwe
-    public boolean isDead(Animal animal) {
-        return !animals.contains(animal);
-    }
     //rusza wszystkie zwierzęta na mapie
     public void moveAllAnimals(){
         Iterator<Animal> iterator = animals.iterator();
         while (iterator.hasNext()) {
             Animal animal = iterator.next();
             this.move(animal);
-            if (this.isDead(animal)) {  // Jeśli zwierzę umarło
-                graves.add(animal.getPosition());
+            if (animal.getEnergy()==0) {
+                graves.add(animal.getPosition());// Jeśli zwierzę umarło
                 iterator.remove();  // Bezpieczne usunięcie elementu
             }
         }
     }
-    //jeśli animals jest ArrayListem to to jest liniowe, jesli będzie HashSetem to będzie lepiej
-    public void die(Animal animal) {
-        animals.remove(animal);
-    }
-    //  vvv  my chyba chcemy clearować te listy po każdym dniu symulacji cn?  vvv
+
+//    //public void createAnimal(Vector2d where) {
+//        Animal newborn = new Animal(where, geneLength, startingEnergy);
+//    }
+
+//    public void sex(Animal father, Animal mother) {
+//
+//    }
+
     public void move(Animal animal) {
         Vector2d where = animal.move(this);
-        if (!isDead(animal)) {
+        if (!where.equals(Animal.DEATH_VECTOR)) {
             if (grass.containsKey(where)) {
                 if (eventGrass.containsKey(where)) {
                     Animal opponent = eventGrass.get(where);
@@ -114,6 +110,36 @@ public class Earth {
             }
         }
     }
+
+    //metoda co sprawdza czy dana pozycja jest nadal w granicach mapy (można wyjść za boczne granice, ale nie za górną i dolną)
+    public boolean canMoveTo(Vector2d place) {
+        return  (place.getY()<=boundary.upperRight().getY() && place.getY()>=0);
+    }
+    public Vector2d moveAroundEarth(Vector2d potentialPosition) {
+        if (potentialPosition.getX() == -1) {
+            return new Vector2d(boundary.upperRight().getX(), potentialPosition.getY());
+        }
+        if (potentialPosition.getX() > boundary.upperRight().getX()) {
+            return new Vector2d(boundary.lowerLeft().getX(), potentialPosition.getY());
+        }
+        return potentialPosition;
+    }
+
+
+    public void addObserver(MapChangeListener observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(MapChangeListener observer) {
+        observers.remove(observer);
+    }
+
+    protected void notifyObservers(String message) {
+        for (MapChangeListener observer : observers) {
+            observer.mapChanged(this, message);
+        }
+    }
+
     //metoda co zasadza określoną liczbą roślinek na mapie (jeśli się mieszczą)
     public void fillEarthWithPlants(int plantAmount) {
         List<Vector2d> fertileLand = new ArrayList<>(this.fertileLand);
@@ -152,6 +178,7 @@ public class Earth {
         remainingPlants-=grownPlants;
         return new int[] {currentIndex,remainingPlants};
     }
+
     public void dinner(){
         for ( var eatingEvent : eventGrass.entrySet()){
             eatPlant(eatingEvent.getValue(),eatingEvent.getKey());
@@ -160,10 +187,6 @@ public class Earth {
     public void eatPlant(Animal animal, Vector2d location) {
         animal.addEnergy(energyFromPlant);
         grass.remove(location);
-    }
-    //metoda co sprawdza czy dana pozycja jest nadal w granicach mapy (można wyjść za boczne granice, ale nie za górną i dolną)
-    public boolean canMoveTo(Vector2d place) {
-        return  (place.getY()<=boundary.upperRight().getY() && place.getY()>=0);
     }
 
     public void clearLists(){
@@ -190,5 +213,4 @@ public class Earth {
 //            // itp itd
         }
     }
-
 }
