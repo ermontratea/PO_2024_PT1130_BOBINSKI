@@ -5,15 +5,7 @@ import java.util.Random;
 
 
 public class Animal implements WorldElement{
-    private final static Vector2d NORTH_VECTOR = new Vector2d(0,1);
-    private final static Vector2d EAST_VECTOR = new Vector2d(1,0);
-    private final static Vector2d SOUTH_VECTOR = new Vector2d(0,-1);
-    private final static Vector2d WEST_VECTOR = new Vector2d(-1,0);
-    private final static Vector2d NORTH_EAST_VECTOR = new Vector2d(1,1);
-    private final static Vector2d SOUTH_EAST_VECTOR = new Vector2d(1,-1);
-    private final static Vector2d SOUTH_WEST_VECTOR = new Vector2d(-1,-1);
-    private final static Vector2d NORTH_WEST_VECTOR = new Vector2d(-1,1);
-
+    ///na pewno tutaj przechowywać randoma?
     Random random = new Random();
     private int direction;
     private Vector2d position;
@@ -22,6 +14,7 @@ public class Animal implements WorldElement{
     private List<Animal> children = new ArrayList<>();
         private int energy;
     private int currentGene;
+    ///te rzeczy też lepiej przechowywać gdzie indziej
     private int energyToBreed;
     private int energyToBirth;
 
@@ -84,7 +77,7 @@ public class Animal implements WorldElement{
         int direction = genes[currentGene];
         Vector2d potentialNewPosition;
         this.direction = (this.direction + direction) % 8;
-        potentialNewPosition = this.getPosition().add(directionToVector(this.direction));
+        potentialNewPosition = this.getPosition().add(geneToMapDirection(this.direction).toUnitVector());
         if (map.canMoveTo(potentialNewPosition)) {
             this.position = potentialNewPosition;
         }
@@ -99,25 +92,25 @@ public class Animal implements WorldElement{
             if (this.age>animal.getAge())
                 {return true;}
             else if (this.age==animal.getAge())
-                {if(this.children>animal.getChildren())
+                {if(this.children.size()>animal.getChildren().size())
                     {return true;}
-                else if (this.children==animal.getChildren())
+                else if (this.children.size()==animal.getChildren().size())
                     {return random.nextBoolean();}
                 else return false;}
             else return false;
         }else return false;
     }
 
-    public Vector2d directionToVector(int direction) {
+    public MapDirection geneToMapDirection(int direction) {
         return switch(direction){
-            case 0 -> NORTH_VECTOR;
-            case 1 -> NORTH_EAST_VECTOR;
-            case 2 -> EAST_VECTOR;
-            case 3 -> SOUTH_EAST_VECTOR;
-            case 4 -> SOUTH_VECTOR;
-            case 5 -> SOUTH_WEST_VECTOR;
-            case 6 -> WEST_VECTOR;
-            case 7 -> NORTH_WEST_VECTOR;
+            case 0 -> MapDirection.NORTH;
+            case 1 -> MapDirection.NORTH_EAST;
+            case 2 -> MapDirection.EAST;
+            case 3 -> MapDirection.SOUTH_EAST;
+            case 4 -> MapDirection.SOUTH;
+            case 5 -> MapDirection.SOUTH_WEST;
+            case 6 -> MapDirection.WEST;
+            case 7 -> MapDirection.NORTH_WEST;
             default -> throw new IllegalStateException("Unexpected value: " + direction);
         };
     }
