@@ -14,8 +14,52 @@
     <top>
         <VBox spacing="10" alignment="CENTER">
             <HBox spacing="10" alignment="CENTER">
-                <Label text="Enter moves:"/>
-                <TextField fx:id="movesTextField" prefWidth="300"/>
+                <Label text="Szerokość mapy:"/>
+                <TextField fx:id="mapWidthField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Wysokość mapy:"/>
+                <TextField fx:id="mapHeightField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Startowa ilość roślin:"/>
+                <TextField fx:id="plantAmountField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Ilość roślin rosnących jednego dnia:"/>
+                <TextField fx:id="plantPerDayField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Startowa ilość zwierząt:"/>
+                <TextField fx:id="animalAmountField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Długość genu:"/>
+                <TextField fx:id="geneLengthField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Startowa energia zwierzaka:"/>
+                <TextField fx:id="startingEnergyField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Minimalna energia zdrowego zwierzaka"/>
+                <TextField fx:id="energyToHealthyField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Energia oddana na rzecz potomka"/>
+                <TextField fx:id="energyToBirthField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Energia za zjedzenie roślinki:"/>
+                <TextField fx:id="energyFromPlantField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Życiodajne truchła"/>
+                <TextField fx:id="deadBodyField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Podmianka genów"/>
+                <TextField fx:id="swapField" prefWidth="300"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER"><Button text="Start Simulation" onAction="#onSimulationStartClicked" prefWidth="150"/>
                 <Button text="New Simulation" onAction="#newGame" prefWidth="150"/></HBox>
