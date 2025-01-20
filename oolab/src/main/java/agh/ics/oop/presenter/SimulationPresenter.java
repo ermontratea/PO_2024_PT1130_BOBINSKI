@@ -7,9 +7,12 @@ import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -170,11 +173,26 @@ public class SimulationPresenter implements MapChangeListener {
         Earth map = new Earth(width, height, plantAmount, animalAmount, geneLength, startingEnergy, energyToHealthy, energyToBirth, energyFromPlant, deadBody, swap);
         map.addObserver(this);
         Simulation simulation = new Simulation(plantPerDay,map);
-        SimulationEngine engine = new SimulationEngine(List.of(simulation));
-        movementDescriptionLabel.setText("Simulation started with moves: ");
-        new Thread(() -> {
-            engine.runSync();
-        }).start();
+
+//        movementDescriptionLabel.setText("Simulation started with moves: ");
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("mapView.fxml"));
+            BorderPane viewRoot = loader.load();
+
+            SimulationWindowController controller = loader.getController();
+            controller.startSimulation(simulation);
+            Stage primaryStage = new Stage();
+            var scene = new Scene(viewRoot);
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Simulation");
+            primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
+            primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
+            primaryStage.show();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
 
     }
 
