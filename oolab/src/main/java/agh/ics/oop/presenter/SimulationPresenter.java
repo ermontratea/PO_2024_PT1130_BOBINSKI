@@ -25,7 +25,30 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
     @FXML
-    private TextField movesTextField;
+    private TextField mapWidthField;
+    @FXML
+    private TextField mapHeightField;
+    @FXML
+    private TextField plantAmountField;
+    @FXML
+    private TextField animalAmountField;
+    @FXML
+    private TextField geneLengthField;
+    @FXML
+    private TextField startingEnergyField;
+    @FXML
+    private TextField energyToHealthyField;
+    @FXML
+    private TextField energyToBirthField;
+    @FXML
+    private TextField energyFromPlantField;
+    @FXML
+    private TextField deadBodyField;
+    @FXML
+    private TextField swapField;
+    @FXML
+    private TextField plantPerDayField;
+
     @FXML
     private Label movementDescriptionLabel;
 
@@ -122,11 +145,31 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @FXML
-    private void onSimulationStartClicked(){
+    private void onSimulationStartClicked() throws Exception {
+        int width = Integer.parseInt(mapWidthField.getText());
+        int height = Integer.parseInt(mapHeightField.getText());
+        int plantAmount = Integer.parseInt(plantAmountField.getText());
+        int animalAmount = Integer.parseInt(animalAmountField.getText());
+        int geneLength = Integer.parseInt(geneLengthField.getText());
+        int startingEnergy = Integer.parseInt(startingEnergyField.getText());
+        int energyToHealthy = Integer.parseInt(energyToHealthyField.getText());
+        int energyToBirth = Integer.parseInt(energyToBirthField.getText());
+        int energyFromPlant = Integer.parseInt(energyFromPlantField.getText());
+        int deadBodyInt = Integer.parseInt(deadBodyField.getText());
+        int swapInt = Integer.parseInt(swapField.getText());
+        int plantPerDay = Integer.parseInt(plantPerDayField.getText());
+        boolean deadBody;
+        boolean swap;
+        if (deadBodyInt == 0) {deadBody = false;}
+        else if (deadBodyInt == 1) {deadBody = true;}
+        else{throw new IllegalArgumentException("Wartość powinna być 0 albo 1");}
+        if (swapInt == 0) {swap = false;}
+        else if (swapInt == 1) {swap = true;}
+        else{throw new IllegalArgumentException("Wartość powinna być 0 albo 1");}
 
-        Earth map = new Earth(10,10,20,10,5,100,5,3,5,false, false);
+        Earth map = new Earth(width, height, plantAmount, animalAmount, geneLength, startingEnergy, energyToHealthy, energyToBirth, energyFromPlant, deadBody, swap);
         map.addObserver(this);
-        Simulation simulation = new Simulation(10,map);
+        Simulation simulation = new Simulation(plantPerDay,map);
         SimulationEngine engine = new SimulationEngine(List.of(simulation));
         movementDescriptionLabel.setText("Simulation started with moves: ");
         new Thread(() -> {

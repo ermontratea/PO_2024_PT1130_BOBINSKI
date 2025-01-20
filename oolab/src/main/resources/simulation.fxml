@@ -25,10 +25,7 @@
                 <Label text="Startowa ilość roślin:"/>
                 <TextField fx:id="plantAmountField" prefWidth="300"/>
             </HBox>
-            <HBox spacing="10" alignment="CENTER">
-                <Label text="Ilość roślin rosnących jednego dnia:"/>
-                <TextField fx:id="plantPerDayField" prefWidth="300"/>
-            </HBox>
+
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Startowa ilość zwierząt:"/>
                 <TextField fx:id="animalAmountField" prefWidth="300"/>
@@ -60,6 +57,10 @@
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Podmianka genów"/>
                 <TextField fx:id="swapField" prefWidth="300"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Ilość roślin rosnących jednego dnia:"/>
+                <TextField fx:id="plantPerDayField" prefWidth="300"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER"><Button text="Start Simulation" onAction="#onSimulationStartClicked" prefWidth="150"/>
                 <Button text="New Simulation" onAction="#newGame" prefWidth="150"/></HBox>
