@@ -12,10 +12,11 @@ public class Simulation implements Runnable {
     private final List<Animal> animals;
     private int plantPerDay;
 
-    public Simulation(int width, int height, int plantAmount, int energyFromPlant, int plantPerDay, boolean deadBody, int animalAmount, int startingEnergy, int energyToBreed, int energyToBirth, int minMutation, int maxMutation, boolean swap, int genLength) {
-        this.map = new Earth(width,height, plantAmount, animalAmount, genLength, startingEnergy, energyToBreed, energyToBirth, energyFromPlant,deadBody);
+    public Simulation(int plantPerDay, Earth map) {
+        this.map = map;
         this.animals = new ArrayList<>();
         this.plantPerDay = plantPerDay;
+
     }
 
     @Override

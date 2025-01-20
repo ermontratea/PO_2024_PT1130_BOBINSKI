@@ -36,14 +36,22 @@ public class SimulationPresenter implements MapChangeListener {
     private int mapWidth;
     private int mapHeight;
 
-    private int width = 50;
-    private int height = 50;
+    private int width;
+    private int height;
 
-    private final int mapMaxHeight = 300;
-    private final int mapMaxWidth = 300;
+
 
     public void setWorldMap(Earth map) {
         this.map = map;
+        this.width=map.getBoundary().upperRight().getX()+1;
+        this.height=map.getBoundary().upperRight().getY()+1;
+        xMin=0;
+        yMin=0;
+        xMax=width-1;
+        yMax=height-1;
+        mapWidth=this.width;
+        mapHeight=this.height;
+
     }
 
     public void labelConstruction(){
@@ -75,6 +83,7 @@ public class SimulationPresenter implements MapChangeListener {
     public void addElements(){
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
+                ///zmienić tworzenei wektorów
                 Vector2d pos = new Vector2d(i, j);
                 if (map.isOccupied(pos)) {
                     mapGrid.add(new Label(map.objectAt(pos).toString()), i - xMin + 1, yMax - j + 1);
@@ -114,13 +123,13 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private void onSimulationStartClicked(){
-        String moveList = movesTextField.getText();
-        List<MoveDirection> directions = parse(moveList.split(" "));
-        List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
+        Earth map = new Earth(10,10,20,5,5,10,5,3,5,false);
         map.addObserver(this);
-        Simulation simulation = new Simulation(10,10,20,5,5,false,5,10,5,2,0,5,false,8);
+
+        Simulation simulation = new Simulation(3,map);
+
         SimulationEngine engine = new SimulationEngine(List.of(simulation));
-        movementDescriptionLabel.setText("Simulation started with moves: " + moveList);
+        movementDescriptionLabel.setText("Simulation started with moves: ");
         new Thread(() -> {
             engine.runSync();
         }).start();

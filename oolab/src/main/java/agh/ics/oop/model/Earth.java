@@ -19,12 +19,14 @@ public class Earth {
     private int energyToBirth;
     private int energyFromPlant;
     private int fertileArea;
-    private List<Vector2d> graveArea;
+    private List<Vector2d> graveArea = new ArrayList<>();
 
     protected final List<MapChangeListener> observers = new ArrayList<>();
     Random random = new Random();
 
-
+    public Boundary getBoundary() {
+        return boundary;
+    }
 
     public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToHealthy, int energyToBirth, int energyFromPlant, boolean deadBody) {
         this.boundary = new Boundary(new Vector2d(0,0), new Vector2d(width-1,height-1));
@@ -149,7 +151,7 @@ public class Earth {
                 iterator.remove();  // Bezpieczne usunięcie elementu
             }
         }
-        notifyObservers("Zwierzaki się ruszyły");
+        notifyObservers("Zwierzaki się ruszyły" + animals.size());
     }
 
     public void move(Animal animal) {
