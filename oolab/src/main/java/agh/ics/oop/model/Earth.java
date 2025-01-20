@@ -20,6 +20,7 @@ public class Earth {
     private int energyFromPlant;
     private int fertileArea;
     private List<Vector2d> graveArea = new ArrayList<>();
+    private final boolean swap;
 
     protected final List<MapChangeListener> observers = new ArrayList<>();
     Random random = new Random();
@@ -28,7 +29,7 @@ public class Earth {
         return boundary;
     }
 
-    public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToHealthy, int energyToBirth, int energyFromPlant, boolean deadBody) {
+    public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToHealthy, int energyToBirth, int energyFromPlant, boolean deadBody, boolean swap) {
         this.boundary = new Boundary(new Vector2d(0,0), new Vector2d(width-1,height-1));
         if (!deadBody) {
             int equatorSizeHalf = height / 10;
@@ -78,6 +79,7 @@ public class Earth {
         for (MapDirection direction : MapDirection.values()) {
             graveArea.add(direction.toUnitVector());
         }
+        this.swap = swap;
     }
     public int[] sex(Animal father, Animal mother) {
         if (mother.getEnergy() >= energyToHealthy) {
@@ -139,8 +141,17 @@ public class Earth {
             father.addEnergy( -energyToBirth );
         }
     }
-    public void sexyTime(){
-
+    public void sexyTime() {
+        Set<Vector2d> sexPlaces = weakerActiveAnimals.keySet();
+        if (swap) {
+            for (Vector2d place : sexPlaces) {
+                this.sexSwap(activeAnimals.get(place), weakerActiveAnimals.get(place));
+            }
+        } else {
+            for (Vector2d place : sexPlaces) {
+                this.sexRandomMutation(activeAnimals.get(place), weakerActiveAnimals.get(place));
+            }
+        }
     }
 
     //rusza wszystkie zwierzęta na mapie

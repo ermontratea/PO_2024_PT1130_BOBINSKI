@@ -31,6 +31,7 @@ public class Simulation implements Runnable {
                 //3. jedzenie roślin
                 map.dinner();
                 ///4. rozmnażanie się zwierząt
+                map.sexyTime();
 
                 // 5. rośnięcie roślin
                 map.fillEarthWithPlants(plantPerDay);
