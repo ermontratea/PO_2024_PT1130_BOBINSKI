@@ -2,9 +2,7 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.model.Earth;
-import agh.ics.oop.model.MapChangeListener;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -12,7 +10,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.List;
 
@@ -31,27 +35,25 @@ public class SimulationWindowController implements MapChangeListener {
     private int yMax;
     private int mapWidth;
     private int mapHeight;
-
+    private double cellHeight;
     private int width;
     private int height;
 
     // Metoda do uruchamiania symulacji
     public void startSimulation(Simulation simulation) {
         SimulationEngine engine = new SimulationEngine(List.of(simulation));
-        // Tutaj dodaj logikę uruchamiania animacji lub symulacji
+
         new Thread(() -> {
             engine.runSync();
         }).start();
     }
-
     @FXML
     private void onCloseButtonClicked() {
-        // Zamknij okno symulacji
         Stage stage = (Stage) simulationLabel.getScene().getWindow();
         stage.close();
     }
-
     public void setWorldMap(Earth map) {
+        this.cellHeight=calculateCellSize(mapGrid.getWidth(),mapGrid.getHeight());
         this.map = map;
         this.width=map.getBoundary().upperRight().getX()+1;
         this.height=map.getBoundary().upperRight().getY()+1;
@@ -61,58 +63,80 @@ public class SimulationWindowController implements MapChangeListener {
         yMax=height-1;
         mapWidth=this.width;
         mapHeight=this.height;
-
+//        if (!isInitialized) { // Wywołaj konstrukcję siatki tylko raz
+//            Platform.runLater(()->{labelConstruction();
+//                columnsConstruction();
+//                rowsConstruction();});
+//
+//            isInitialized = true; // Oznacz mapę jako zainicjalizowaną
+//        }
     }
-
     public void labelConstruction(){
-        mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
-        mapGrid.getRowConstraints().add(new RowConstraints(height));
+        mapGrid.getColumnConstraints().add(new ColumnConstraints(this.cellHeight));
+        mapGrid.getRowConstraints().add(new RowConstraints(cellHeight));
         Label label = new Label("y/x");
         mapGrid.add(label, 0, 0);
         GridPane.setHalignment(label, HPos.CENTER);
     }
-
     public void columnsConstruction(){
         for(int i=0; i<mapWidth; i++){
             Label label = new Label(Integer.toString(i+xMin));
             GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
+            mapGrid.getColumnConstraints().add(new ColumnConstraints(this.cellHeight ));
             mapGrid.add(label, i+1, 0);
         }
     }
-
     public void rowsConstruction(){
         for(int i=0; i<mapHeight; i++){
             Label label = new Label(Integer.toString(yMax-i));
             GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.getRowConstraints().add(new RowConstraints(height));
+            mapGrid.getRowConstraints().add(new RowConstraints(this.cellHeight));
             mapGrid.add(label, 0, i+1);
         }
     }
-
     public void addElements(){
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
-                ///zmienić tworzenei wektorów
                 Vector2d pos = new Vector2d(i, j);
-                if (map.isOccupied(pos)) {
-                    mapGrid.add(new Label(map.objectAt(pos).toString()), i - xMin + 1, yMax - j + 1);
-                }
-                else {
-                    mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
+//
+                StackPane cellPane = new StackPane();
+                cellPane.setPrefSize(cellHeight, cellHeight);
+
+                Rectangle background = new Rectangle(cellHeight, cellHeight);
+                if (map.isOccupied(pos) && map.objectAt(pos) instanceof Grass) {
+                    background.setFill(Color.GREEN);
+                } else {
+                    background.setFill(Color.LIGHTGREEN);
                 }
 
-                mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
+                Circle animalCircle = null;
+                if (map.isOccupied(pos) && map.objectAt(pos) instanceof Animal) {
+                    animalCircle = new Circle(cellHeight / 3);
+                    animalCircle.setFill(Color.SADDLEBROWN);
+                }
+
+                cellPane.getChildren().add(background);
+                if (animalCircle != null) {
+                    cellPane.getChildren().add(animalCircle);
+                }
+
+                mapGrid.add(cellPane, i - xMin + 1, yMax - j + 1);
+
+
             }
         }
     }
-
     private void drawMap() {
         labelConstruction();
         columnsConstruction();
         rowsConstruction();
         addElements();
-        mapGrid.setGridLinesVisible(true);
+        mapGrid.setGridLinesVisible(false);
+    }
+    private double calculateCellSize(double gridWidth, double gridHeight) {
+        double cellWidth = gridWidth / (mapWidth+2);
+        double cellHeight = gridHeight / (mapHeight+2);
+        return Math.min(cellWidth, cellHeight); // Pola kwadratowe
     }
 
     private void clearGrid(){

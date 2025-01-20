@@ -1,150 +1,99 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.model.trash.MoveDirection;
 import agh.ics.oop.Simulation;
-import agh.ics.oop.SimulationApp;
-import agh.ics.oop.SimulationEngine;
+
 import agh.ics.oop.model.*;
-import javafx.application.Platform;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
+
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.ChoiceBox;
+
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import static agh.ics.oop.model.trash.OptionsParser.parse;
 
-public class SimulationPresenter implements MapChangeListener {
+public class SimulationPresenter  {
     private Earth map;
     @FXML
-    private GridPane mapGrid;
-    @FXML
-    private TextField mapWidthField;
-    @FXML
-    private TextField mapHeightField;
-    @FXML
-    private TextField plantAmountField;
-    @FXML
-    private TextField animalAmountField;
-    @FXML
-    private TextField geneLengthField;
-    @FXML
-    private TextField startingEnergyField;
-    @FXML
-    private TextField energyToHealthyField;
-    @FXML
-    private TextField energyToBirthField;
-    @FXML
-    private TextField energyFromPlantField;
-    @FXML
-    private TextField deadBodyField;
-    @FXML
-    private TextField swapField;
-    @FXML
-    private TextField plantPerDayField;
+    private ChoiceBox<String> configChoiceBox;
 
     @FXML
-    private Label movementDescriptionLabel;
+    private TextField mapWidthField, mapHeightField, plantAmountField, animalAmountField,
+            geneLengthField, startingEnergyField, energyToHealthyField,
+            energyToBirthField, energyFromPlantField, plantPerDayField;
+    @FXML
+    private ChoiceBox<Boolean> deadBodyField;
+    @FXML
+    private ChoiceBox<Boolean> swapField;
+    private Map<String, Config> configMap = new HashMap<>();
 
-    private int xMin;
-    private int yMin;
-    private int xMax;
-    private int yMax;
-    private int mapWidth;
-    private int mapHeight;
-
-    private int width;
-    private int height;
-
-
-
-    public void setWorldMap(Earth map) {
-        this.map = map;
-        this.width=map.getBoundary().upperRight().getX()+1;
-        this.height=map.getBoundary().upperRight().getY()+1;
-        xMin=0;
-        yMin=0;
-        xMax=width-1;
-        yMax=height-1;
-        mapWidth=this.width;
-        mapHeight=this.height;
-
-    }
-
-    public void labelConstruction(){
-        mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
-        mapGrid.getRowConstraints().add(new RowConstraints(height));
-        Label label = new Label("y/x");
-        mapGrid.add(label, 0, 0);
-        GridPane.setHalignment(label, HPos.CENTER);
-    }
-
-    public void columnsConstruction(){
-        for(int i=0; i<mapWidth; i++){
-            Label label = new Label(Integer.toString(i+xMin));
-            GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
-            mapGrid.add(label, i+1, 0);
+    // uwaga
+    @FXML
+    private void onConfigSelected() {
+        String selectedConfig = configChoiceBox.getValue();
+        if (selectedConfig != null && configMap.containsKey(selectedConfig)) {
+            Config config = configMap.get(selectedConfig);
+            setFields(config);
         }
     }
 
-    public void rowsConstruction(){
-        for(int i=0; i<mapHeight; i++){
-            Label label = new Label(Integer.toString(yMax-i));
-            GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.getRowConstraints().add(new RowConstraints(height));
-            mapGrid.add(label, 0, i+1);
-        }
+    private void setFields(Config config) {
+        mapWidthField.setText(String.valueOf(config.mapWidth));
+        mapHeightField.setText(String.valueOf(config.mapHeight));
+        plantAmountField.setText(String.valueOf(config.plantAmount));
+        animalAmountField.setText(String.valueOf(config.animalAmount));
+        geneLengthField.setText(String.valueOf(config.geneLength));
+        startingEnergyField.setText(String.valueOf(config.startingEnergy));
+        energyToHealthyField.setText(String.valueOf(config.energyToHealthy));
+        energyToBirthField.setText(String.valueOf(config.energyToBirth));
+        energyFromPlantField.setText(String.valueOf(config.energyFromPlant));
+        plantPerDayField.setText(String.valueOf(config.plantPerDay));
+        deadBodyField.setValue(config.deadBody);
+        swapField.setValue(config.swap);
     }
 
-    public void addElements(){
-        for (int i = xMin; i <= xMax; i++) {
-            for (int j = yMax; j >= yMin; j--) {
-                ///zmienić tworzenei wektorów
-                Vector2d pos = new Vector2d(i, j);
-                if (map.isOccupied(pos)) {
-                    mapGrid.add(new Label(map.objectAt(pos).toString()), i - xMin + 1, yMax - j + 1);
-                }
-                else {
-                    mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
-                }
-
-                mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
-            }
-        }
+    @FXML
+    public void initialize() {
+        deadBodyField.setValue(false);
+        swapField.setValue(false);
+        Config config1 = new Config(10,10,5,5,4,10,5,4, 3, 5, false, false);
+        Config config2 = new Config(5, 5, 3, 3, 10, 6, 5, 3, 2, 8, true, true);
+        Config config3 = new Config(25, 25, 40, 12, 6, 10, 8, 6, 4, 30, false, true);
+        Config config4 = new Config(50, 50, 80, 24, 8, 15, 10, 8, 5, 60, true, false);
+        Config config5 = new Config(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, false, false);
+        configMap.put("Konfiguracja 1", config1);
+        configMap.put("Konfiguracja 2", config2);
+        configMap.put("Konfiguracja 3", config3);
+        configMap.put("Konfiguracja 4", config4);
+        configMap.put("Konfiguracja 5", config5);
     }
 
-    private void drawMap() {
-        labelConstruction();
-        columnsConstruction();
-        rowsConstruction();
-        addElements();
-        mapGrid.setGridLinesVisible(true);
-    }
-
-    private void clearGrid(){
-        mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0));
-        mapGrid.getColumnConstraints().clear();
-        mapGrid.getRowConstraints().clear();
-    }
-
-    @Override
-    public void mapChanged(Earth worldMap, String message) {
-        setWorldMap(worldMap);
-        Platform.runLater(() -> {
-            clearGrid();
-            drawMap();
-            movementDescriptionLabel.setText(message);
-        });
+    @FXML
+    private void onSaveConfig() {
+        String configName = configChoiceBox.getValue();
+        Config newConfig = new Config(
+                Integer.parseInt(mapWidthField.getText()),
+                Integer.parseInt(mapHeightField.getText()),
+                Integer.parseInt(plantAmountField.getText()),
+                Integer.parseInt(animalAmountField.getText()),
+                Integer.parseInt(geneLengthField.getText()),
+                Integer.parseInt(startingEnergyField.getText()),
+                Integer.parseInt(energyToHealthyField.getText()),
+                Integer.parseInt(energyToBirthField.getText()),
+                Integer.parseInt(energyFromPlantField.getText()),
+                Integer.parseInt(plantPerDayField.getText()),
+                deadBodyField.getValue(),
+                swapField.getValue()
+        );
+        configMap.put(configName, newConfig);
     }
 
     @FXML
@@ -158,21 +107,10 @@ public class SimulationPresenter implements MapChangeListener {
         int energyToHealthy = Integer.parseInt(energyToHealthyField.getText());
         int energyToBirth = Integer.parseInt(energyToBirthField.getText());
         int energyFromPlant = Integer.parseInt(energyFromPlantField.getText());
-        int deadBodyInt = Integer.parseInt(deadBodyField.getText());
-        int swapInt = Integer.parseInt(swapField.getText());
+        boolean deadBody = deadBodyField.getValue();
+        boolean swap = swapField.getValue();
         int plantPerDay = Integer.parseInt(plantPerDayField.getText());
-        boolean deadBody;
-        boolean swap;
-        if (deadBodyInt == 0) {deadBody = false;}
-        else if (deadBodyInt == 1) {deadBody = true;}
-        else{throw new IllegalArgumentException("Wartość powinna być 0 albo 1");}
-        if (swapInt == 0) {swap = false;}
-        else if (swapInt == 1) {swap = true;}
-        else{throw new IllegalArgumentException("Wartość powinna być 0 albo 1");}
-
         Earth map = new Earth(width, height, plantAmount, animalAmount, geneLength, startingEnergy, energyToHealthy, energyToBirth, energyFromPlant, deadBody, swap);
-        map.addObserver(this);
-        Simulation simulation = new Simulation(plantPerDay,map);
 
 //        movementDescriptionLabel.setText("Simulation started with moves: ");
         try {
@@ -181,6 +119,10 @@ public class SimulationPresenter implements MapChangeListener {
             BorderPane viewRoot = loader.load();
 
             SimulationWindowController controller = loader.getController();
+            map.addObserver(controller);
+
+
+            Simulation simulation = new Simulation(plantPerDay,map);
             controller.startSimulation(simulation);
             Stage primaryStage = new Stage();
             var scene = new Scene(viewRoot);
@@ -192,17 +134,28 @@ public class SimulationPresenter implements MapChangeListener {
         }catch (IOException e){
             e.printStackTrace();
         }
-
-
     }
 
-    @FXML
-    private void newGame(){
-        SimulationApp simulationApp = new SimulationApp();
-        try {
-            simulationApp.start(new Stage());
-        } catch (IOException e) {
-            e.printStackTrace();
+    private static class Config {
+        int mapWidth, mapHeight, plantAmount, animalAmount, geneLength;
+        int startingEnergy, energyToHealthy, energyToBirth, energyFromPlant, plantPerDay;
+        boolean deadBody, swap;
+
+        Config(int mapWidth, int mapHeight, int plantAmount, int animalAmount, int geneLength,
+               int startingEnergy, int energyToHealthy, int energyToBirth, int energyFromPlant, int plantPerDay,
+               boolean deadBody, boolean swap) {
+            this.mapWidth = mapWidth;
+            this.mapHeight = mapHeight;
+            this.plantAmount = plantAmount;
+            this.animalAmount = animalAmount;
+            this.geneLength = geneLength;
+            this.startingEnergy = startingEnergy;
+            this.energyToHealthy = energyToHealthy;
+            this.energyToBirth = energyToBirth;
+            this.energyFromPlant = energyFromPlant;
+            this.plantPerDay = plantPerDay;
+            this.deadBody = deadBody;
+            this.swap = swap;
         }
     }
 }

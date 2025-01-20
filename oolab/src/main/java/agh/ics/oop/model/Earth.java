@@ -21,6 +21,7 @@ public class Earth {
     private int fertileArea;
     private List<Vector2d> graveArea = new ArrayList<>();
     private final boolean swap;
+    private boolean deadBody;
 
     protected final List<MapChangeListener> observers = new ArrayList<>();
     Random random = new Random();
@@ -78,8 +79,10 @@ public class Earth {
         fertileArea = (width * height) / 5;
         for (MapDirection direction : MapDirection.values()) {
             graveArea.add(direction.toUnitVector());
+            graveArea.add(new Vector2d(0,0));
         }
         this.swap = swap;
+        this.deadBody=deadBody;
     }
     public int[] sex(Animal father, Animal mother) {
         if (mother.getEnergy() >= energyToHealthy) {
@@ -236,6 +239,9 @@ public class Earth {
 
     //metoda co zasadza określoną liczbą roślinek na mapie (jeśli się mieszczą)
     public void fillEarthWithPlants(int plantAmount) {
+        if (deadBody) {
+            this.fertileNearBodies();
+        }
         List<Vector2d> fertileLand = new ArrayList<>(this.fertileLand);
         List<Vector2d> unfruitfulLand = new ArrayList<>(this.unfruitfulLand);
         int plantsOnFertile = 0 ;
@@ -293,18 +299,20 @@ public class Earth {
     ///DO NAPISANIA - może jednak zrobić enuma mapdirections
 
     public void fertileNearBodies() {
-        unfruitfulLand.addAll(fertileLand);
-        fertileLand.clear();
-        // zaokrąglanie w góre
-        int landPerGrave = (fertileArea + graves.size() - 1) / graves.size();
-        landPerGrave = Math.min(9, landPerGrave);
-        for (Vector2d grave : graves) {
-            Collections.shuffle(graveArea);
-            for (int i = 0; i < landPerGrave; i++) {
-                fertileLand.add(grave.add(graveArea.get(i)));
+        if (!graves.isEmpty()) {
+            unfruitfulLand.addAll(fertileLand);
+            fertileLand.clear();
+            // zaokrąglanie w góre
+            int landPerGrave = (fertileArea + graves.size() - 1) / graves.size();
+            landPerGrave = Math.min(9, landPerGrave);
+            for (Vector2d grave : graves) {
+                Collections.shuffle(graveArea);
+                for (int i = 0; i < landPerGrave; i++) {
+                    fertileLand.add(grave.add(graveArea.get(i)));
+                }
             }
+            unfruitfulLand.removeAll(fertileLand);
         }
-        unfruitfulLand.removeAll(fertileLand);
     }
     public boolean isOccupied(Vector2d position) {
         return grass.containsKey(position) || activeAnimals.containsKey(position);

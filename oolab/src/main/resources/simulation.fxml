@@ -6,7 +6,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<?import java.lang.Boolean?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
@@ -14,63 +17,86 @@
     <top>
         <VBox spacing="10" alignment="CENTER">
             <HBox spacing="10" alignment="CENTER">
+                <Label text="Wybierz konfigurację:"/>
+                <ChoiceBox fx:id="configChoiceBox" prefWidth="300" onAction="#onConfigSelected">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Konfiguracja 1"/>
+                            <String fx:value="Konfiguracja 2"/>
+                            <String fx:value="Konfiguracja 3"/>
+                            <String fx:value="Konfiguracja 4"/>
+                            <String fx:value="Konfiguracja 5"/>
+                        </FXCollections>
+                    </items>
+                </ChoiceBox>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
                 <Label text="Szerokość mapy:"/>
-                <TextField fx:id="mapWidthField" prefWidth="300"/>
+                <TextField fx:id="mapWidthField" prefWidth="300" text="10"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Wysokość mapy:"/>
-                <TextField fx:id="mapHeightField" prefWidth="300"/>
+                <TextField fx:id="mapHeightField" prefWidth="300" text="10"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Startowa ilość roślin:"/>
-                <TextField fx:id="plantAmountField" prefWidth="300"/>
+                <TextField fx:id="plantAmountField" prefWidth="300" text="20"/>
             </HBox>
 
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Startowa ilość zwierząt:"/>
-                <TextField fx:id="animalAmountField" prefWidth="300"/>
+                <TextField fx:id="animalAmountField" prefWidth="300" text="6"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Długość genu:"/>
-                <TextField fx:id="geneLengthField" prefWidth="300"/>
+                <TextField fx:id="geneLengthField" prefWidth="300" text="4"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Startowa energia zwierzaka:"/>
-                <TextField fx:id="startingEnergyField" prefWidth="300"/>
+                <TextField fx:id="startingEnergyField" prefWidth="300" text="15"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Minimalna energia zdrowego zwierzaka"/>
-                <TextField fx:id="energyToHealthyField" prefWidth="300"/>
+                <TextField fx:id="energyToHealthyField" prefWidth="300" text="10"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Energia oddana na rzecz potomka"/>
-                <TextField fx:id="energyToBirthField" prefWidth="300"/>
+                <TextField fx:id="energyToBirthField" prefWidth="300" text="7"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Energia za zjedzenie roślinki:"/>
-                <TextField fx:id="energyFromPlantField" prefWidth="300"/>
+                <TextField fx:id="energyFromPlantField" prefWidth="300" text="5"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Życiodajne truchła"/>
-                <TextField fx:id="deadBodyField" prefWidth="300"/>
+                <ChoiceBox fx:id="deadBodyField" prefWidth="300">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <Boolean fx:value="false"/>
+                            <Boolean fx:value="true"/>
+                        </FXCollections>
+                    </items>
+                </ChoiceBox>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Podmianka genów"/>
-                <TextField fx:id="swapField" prefWidth="300"/>
+                <ChoiceBox fx:id="swapField" prefWidth="300">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <Boolean fx:value="false"/>
+                            <Boolean fx:value="true"/>
+                        </FXCollections>
+                    </items>
+                </ChoiceBox>
             </HBox>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Ilość roślin rosnących jednego dnia:"/>
-                <TextField fx:id="plantPerDayField" prefWidth="300"/>
+                <TextField fx:id="plantPerDayField" prefWidth="300" text="10"/>
             </HBox>
-            <HBox spacing="10" alignment="CENTER"><Button text="Start Simulation" onAction="#onSimulationStartClicked" prefWidth="150"/>
-                <Button text="New Simulation" onAction="#newGame" prefWidth="150"/></HBox>
-
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Start Simulation" onAction="#onSimulationStartClicked" prefWidth="150"/>
+                <Button text="Zapisz konfiguracje" onAction="#onSaveConfig" prefWidth="150"/>
+            </HBox>
         </VBox>
     </top>
-<!--    <center>-->
-<!--        <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER"/>-->
-<!--    </center>-->
-<!--    <bottom>-->
-<!--        <Label fx:id="movementDescriptionLabel" text="Movement description will appear here." textAlignment="CENTER"/>-->
-<!--    </bottom>-->
 </BorderPane>
