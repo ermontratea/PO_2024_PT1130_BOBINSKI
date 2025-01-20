@@ -139,6 +139,9 @@ public class Earth {
             father.addEnergy( -energyToBirth );
         }
     }
+    public void sexyTime(){
+
+    }
 
     //rusza wszystkie zwierzęta na mapie
     public void moveAllAnimals(){
@@ -292,24 +295,15 @@ public class Earth {
         }
         unfruitfulLand.removeAll(fertileLand);
     }
-    public boolean isOccupied(Vector2d position){
-        if (grass.containsKey(position)){
-            return true;
-        }else{
-            if(activeAnimals.containsKey(position)){
-                return true;
-            }
-            else{return false;}
-        }
+    public boolean isOccupied(Vector2d position) {
+        return grass.containsKey(position) || activeAnimals.containsKey(position);
     }
-    public WorldElement objectAt(Vector2d position){
-        if (isOccupied(position)){
-            if (activeAnimals.containsKey(position)){
-                return activeAnimals.get(position);
-            }
-            else{return grass.get(position);}
+
+    public WorldElement objectAt(Vector2d position) {
+        if (activeAnimals.containsKey(position)) {
+            return activeAnimals.get(position);
         }
-        else{return null;}
+        return grass.get(position);
     }
 
     public Set<Vector2d> getFertileLand(){

@@ -123,10 +123,10 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private void onSimulationStartClicked(){
-        Earth map = new Earth(10,10,20,5,5,10,5,3,5,false);
+        Earth map = new Earth(10,10,20,10,5,100,5,3,5,false);
         map.addObserver(this);
 
-        Simulation simulation = new Simulation(3,map);
+        Simulation simulation = new Simulation(10,map);
 
         SimulationEngine engine = new SimulationEngine(List.of(simulation));
         movementDescriptionLabel.setText("Simulation started with moves: ");

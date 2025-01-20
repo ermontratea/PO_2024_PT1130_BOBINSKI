@@ -35,8 +35,9 @@ public class Simulation implements Runnable {
                 // 5. rośnięcie roślin
                 map.fillEarthWithPlants(plantPerDay);
                 // 6. clearowanie wszystkich list z eventami, a także chyba grobów (chyba że zostają na kilka dni)
+                Thread.sleep(500);
                 map.clearLists();
-                Thread.sleep(1000);
+
                 //koniec dnia
                 day++;
             }catch (InterruptedException e){

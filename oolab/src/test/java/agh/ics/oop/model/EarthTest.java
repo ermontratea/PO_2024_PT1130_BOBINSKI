@@ -74,6 +74,7 @@ class EarthTest {
         earth.move(animal);
         Vector2d grassPosition = animal.getPosition();
 
+        //System.out.println(earth.getActiveAnimals().size());
         earth.dinner();
 
         assertFalse(earth.getGrass().containsKey(grassPosition));
