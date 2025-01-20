@@ -38,6 +38,9 @@ public class SimulationWindowController implements MapChangeListener {
     private double cellHeight;
     private int width;
     private int height;
+    private boolean isInitialised=false;
+    private int healthyEnergy;
+
 
     // Metoda do uruchamiania symulacji
     public void startSimulation(Simulation simulation) {
@@ -63,13 +66,8 @@ public class SimulationWindowController implements MapChangeListener {
         yMax=height-1;
         mapWidth=this.width;
         mapHeight=this.height;
-//        if (!isInitialized) { // Wywołaj konstrukcję siatki tylko raz
-//            Platform.runLater(()->{labelConstruction();
-//                columnsConstruction();
-//                rowsConstruction();});
-//
-//            isInitialized = true; // Oznacz mapę jako zainicjalizowaną
-//        }
+        healthyEnergy = this.map.getEnergyToHealthy();
+
     }
     public void labelConstruction(){
         mapGrid.getColumnConstraints().add(new ColumnConstraints(this.cellHeight));
@@ -104,15 +102,28 @@ public class SimulationWindowController implements MapChangeListener {
 
                 Rectangle background = new Rectangle(cellHeight, cellHeight);
                 if (map.isOccupied(pos) && map.objectAt(pos) instanceof Grass) {
-                    background.setFill(Color.GREEN);
+                    background.setFill(Color.rgb(34, 139, 34));
                 } else {
-                    background.setFill(Color.LIGHTGREEN);
+                    background.setFill(Color.rgb(144, 160, 70));
                 }
+
 
                 Circle animalCircle = null;
                 if (map.isOccupied(pos) && map.objectAt(pos) instanceof Animal) {
+                    Animal animal = (Animal) map.objectAt(pos);
+                    int energy = animal.getEnergy();
+                    if (energy<=healthyEnergy/2){
                     animalCircle = new Circle(cellHeight / 3);
-                    animalCircle.setFill(Color.SADDLEBROWN);
+                    animalCircle.setFill(Color.rgb(205, 175, 149));}
+                    else if(energy<=healthyEnergy){
+                        animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(181, 101, 70));}
+                    else if(energy<=healthyEnergy*3/2){animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(150, 75, 0));}
+                    else if(energy<=healthyEnergy*2){animalCircle = new Circle(cellHeight / 3);
+                    animalCircle.setFill(Color.rgb(120, 60, 20));}
+                    else{animalCircle = new Circle(cellHeight / 3);
+                    animalCircle.setFill(Color.rgb(80, 40, 20));}
                 }
 
                 cellPane.getChildren().add(background);
@@ -147,6 +158,7 @@ public class SimulationWindowController implements MapChangeListener {
 
     @Override
     public void mapChanged(Earth worldMap, String message) {
+
         setWorldMap(worldMap);
         Platform.runLater(() -> {
             clearGrid();

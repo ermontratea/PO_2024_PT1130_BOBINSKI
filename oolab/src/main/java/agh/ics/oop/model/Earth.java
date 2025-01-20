@@ -30,6 +30,10 @@ public class Earth {
         return boundary;
     }
 
+    public int getEnergyToHealthy() {
+        return energyToHealthy;
+    }
+
     public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToHealthy, int energyToBirth, int energyFromPlant, boolean deadBody, boolean swap) {
         this.boundary = new Boundary(new Vector2d(0,0), new Vector2d(width-1,height-1));
         if (!deadBody) {
