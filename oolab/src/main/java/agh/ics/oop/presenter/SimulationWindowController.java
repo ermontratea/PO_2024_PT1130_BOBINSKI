@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SimulationWindowController implements MapChangeListener {
@@ -59,6 +61,30 @@ public class SimulationWindowController implements MapChangeListener {
     private Label averageLifetimeField;
     @FXML
     private Label averageChildAmountField;
+    @FXML
+    private TextField makingSlave;
+    @FXML
+    private Label slaveGenom;
+    @FXML
+    private Label slaveActiveGen;
+    @FXML
+    private Label slaveEnergy;
+    @FXML
+    private Label slaveEatedPlants;
+    @FXML
+    private Label slaveChildrens;
+    @FXML
+    private Label slaveDescendants;
+    @FXML
+    private Label slaveAge;
+    @FXML
+    private Label slaveDayOfDeath;
+    @FXML
+    private Label dayField;
+
+
+    private Animal slave = null;
+
 
 
     // Metoda do uruchamiania symulacji
@@ -112,6 +138,7 @@ public class SimulationWindowController implements MapChangeListener {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Vector2d pos = new Vector2d(i, j);
+
 //
                 StackPane cellPane = new StackPane();
                 cellPane.setPrefSize(cellHeight, cellHeight);
@@ -125,6 +152,15 @@ public class SimulationWindowController implements MapChangeListener {
                 Circle animalCircle = null;
                 if (map.isOccupied(pos) && map.objectAt(pos) instanceof Animal) {
                     Animal animal = (Animal) map.objectAt(pos);
+                    if (slave!=null && slave.getPosition().equals(pos)){
+                        updateSlave(slave);
+                        if (slave.getEnergy()==0){
+                            slaveDayOfDeath.setText("Dzień śmierci: "+ map.getDay());
+                            slave.addEnergy(-1);
+                        }
+                        animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(255, 0, 0));
+                    }else{
                     int energy = animal.getEnergy();
                     if (energy<=healthyEnergy/2){
                     animalCircle = new Circle(cellHeight / 3);
@@ -137,7 +173,7 @@ public class SimulationWindowController implements MapChangeListener {
                     else if(energy<=healthyEnergy*2){animalCircle = new Circle(cellHeight / 3);
                     animalCircle.setFill(Color.rgb(120, 60, 20));}
                     else{animalCircle = new Circle(cellHeight / 3);
-                    animalCircle.setFill(Color.rgb(80, 40, 20));}
+                    animalCircle.setFill(Color.rgb(80, 40, 20));}}
                 }
                 cellPane.getChildren().add(background);
                 if (animalCircle != null) {
@@ -173,9 +209,10 @@ public class SimulationWindowController implements MapChangeListener {
         Platform.runLater(() -> {
             clearGrid();
             drawMap();
+            dayField.setText("Dzień:"+map.getDay());
             animalAmountField.setText("Ilość żywych zwierząt: " + animalAmount);
             grassAmountField.setText("Ilość trawy: " + grassAmount);
-            freeSquareField.setText("Ilość wolnych pul: " + freeSquare);
+            freeSquareField.setText("Ilość wolnych pól: " + freeSquare);
             averageEnergyField.setText("Średnia ilość energi: " + averageEnergy + " /1000");
             averageLifetimeField.setText("Średni wiek życia: " + averageLifetime + " /1000");
             averageChildAmountField.setText("Średnia ilość dzieci: " + averageChildAmount + " /1000");
@@ -227,6 +264,7 @@ public class SimulationWindowController implements MapChangeListener {
                 Circle animalCircle = null;
                 if (map.isOccupied(pos) && map.objectAt(pos) instanceof Animal) {
                     Animal animal = (Animal) map.objectAt(pos);
+
                     int energy = animal.getEnergy();
                     if (energy<=healthyEnergy/2){
                         animalCircle = new Circle(cellHeight / 3);
@@ -250,18 +288,53 @@ public class SimulationWindowController implements MapChangeListener {
             }
         }
     }
+    @FXML
+    public void onMakeSlave() {
 
-//
-//    @FXML
-//    private void onPauseResumeClicked() {
-//        if (isPaused) {
-//             // Wznowienie symulacji
-//            isPaused = false;
-//            pauseResumeButton.setText("Pause"); // Zmiana tekstu przycisku na "Pause"
-//        } else {
-//             // Pauza symulacji
-//            isPaused = true;
-//            pauseResumeButton.setText("Resume"); // Zmiana tekstu przycisku na "Resume"
-//        }
-//    }
+        if (!map.isRunning() && 0 < Integer.parseInt(makingSlave.getText()) && Integer.parseInt(makingSlave.getText()) < map.getAnimalsAmount() ) {
+            slave = (Animal) map.getAnimals().toArray()[Integer.parseInt(makingSlave.getText())];
+            updateSlave(slave);
+            Platform.runLater(() -> {
+                clearGrid();
+                labelConstruction();
+                columnsConstruction();
+                rowsConstruction();
+                addElements();
+                mapGrid.setGridLinesVisible(false);
+            });
+        }
+    }
+
+    private void updateSlave(Animal animal) {
+        slaveGenom.setText("Genom zwierzaka: " + Arrays.toString(animal.getGenes()));
+        slaveActiveGen.setText("Aktywowana część genomu: " + animal.getCurrentGene());
+        slaveEnergy.setText("Energia zwierzaka: " + animal.getEnergy());
+        slaveEatedPlants.setText("Zjedzone rośliny: "+animal.getEatenGrass());
+        slaveChildrens.setText("Ilość dzieci: " + animal.getChildren().size());
+        slaveDescendants.setText("Ilość potomków: "+ animal.getDescendants());
+        slaveAge.setText("Wiek: " + animal.getAge());
+
+    }
+
+    @FXML
+    public void onReleaseSlave() {
+        slave = null;
+        slaveGenom.setText("Genom zwierzaka: ");
+        slaveActiveGen.setText("Aktywowana część genomu: ");
+        slaveEnergy.setText("Energia zwierzaka: ");
+        slaveEatedPlants.setText("Zjedzone rośliny: ");
+        slaveChildrens.setText("Ilość dzieci: ");
+        slaveDescendants.setText("Ilość potomków: ");
+        slaveAge.setText("Wiek: ");
+        slaveDayOfDeath.setText("Dzień śmierci: ");
+        Platform.runLater(() -> {
+            clearGrid();
+            labelConstruction();
+            columnsConstruction();
+            rowsConstruction();
+            addElements();
+            mapGrid.setGridLinesVisible(false);
+        });
+    }
+
 }

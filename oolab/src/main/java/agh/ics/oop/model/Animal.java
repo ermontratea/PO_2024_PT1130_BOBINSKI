@@ -14,11 +14,26 @@ public class Animal implements WorldElement{
     private int[] genes;
     private int energy;
     private int currentGene;
+    private int eatenGrass=0;
+
+    public int getEatenGrass(){
+        return eatenGrass;
+    }
+    public void eatGrass(){
+        eatenGrass++;
+    }
 
     public void addEnergy(int energy) {
         this.energy += energy;
     }
-
+    public int getDescendants() {
+        if (children.size() == 0) {return 0;}
+        int result = 0;
+        for (Animal child : children) {
+            result = result + child.getDescendants();
+        }
+        return result;
+    }
     public int[] getGenes() {
         return genes;
     }

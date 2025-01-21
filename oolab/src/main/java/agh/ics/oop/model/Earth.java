@@ -29,6 +29,7 @@ public class Earth {
     private int sumOfDeadAnimalsAge = 0;
     private int allChilders = 0;
     private boolean running = true;
+    private int day;
 
 
     protected final List<MapChangeListener> observers = new ArrayList<>();
@@ -37,18 +38,18 @@ public class Earth {
     public boolean isGrassAt(Vector2d pos) {
         return grass.containsKey(pos);
     }
-    public int genomToInt(Animal animal) {
-        int result = 0;
-        for (int i=0; i<geneLength; i++) {
-            result+= animal.getGenes()[i]*(geneLength-i-1);
-        }
-        return result;
+    public void nextDay(){
+        day++;
+    }
+    public int getDay(){
+        return day;
     }
 
 
     public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToHealthy, int energyToBirth, int energyFromPlant, boolean deadBody, boolean swap) {
         this.boundary = new Boundary(new Vector2d(0,0), new Vector2d(width-1,height-1));
         this.deadBody = deadBody;
+        this.day = 1;
         allArea = width*height;
         sumOfEnergy = startingEnergy*animalAmount;
         if (!deadBody) {
@@ -84,6 +85,8 @@ public class Earth {
         for (int i=0; i<animalAmount; i++) {
             Animal animal = new Animal(new Vector2d(random.nextInt(width), random.nextInt(height)),geneLength,startingEnergy);
             animals.add(animal);
+
+
         }
         this.energyToHealthy = energyToHealthy;
         this.energyToBirth = energyToBirth;
@@ -142,6 +145,7 @@ public class Earth {
             }
             Animal newborn = new Animal(father.getPosition(), geneLength, 2*energyToBirth, newbornGenes);
             animals.add(newborn);
+
             mother.addEnergy( -energyToBirth );
             mother.addChild(newborn);
             father.addChild(newborn);
@@ -163,8 +167,11 @@ public class Earth {
             }
             Animal newborn = new Animal(father.getPosition(), geneLength, 2*energyToBirth, newbornGenes);
             animals.add(newborn);
+
             mother.addEnergy( -energyToBirth );
             father.addEnergy( -energyToBirth );
+            mother.addChild(newborn);
+            father.addChild(newborn);
         }
     }
     public void sexyTime() {
@@ -229,6 +236,7 @@ public class Earth {
                     weakerActiveAnimals.put(where, animal);
                 }
             } else {
+
                 activeAnimals.put(where, animal);
             }
         }
@@ -326,6 +334,7 @@ public class Earth {
     public void eatPlant(Animal animal, Vector2d location) {
         animal.addEnergy(energyFromPlant);
         grass.remove(location);
+        animal.eatGrass();
     }
 
     public void clearLists(){
