@@ -38,6 +38,9 @@ public class Simulation implements Runnable {
         int day =1;
         while (day<101) {
             try {
+                while (!map.isRunning()) {
+                    Thread.sleep(1000);
+                }
                 //1. umieranie i ruszanie zwierzaków (tworzenie się list eventGrass i activeAnimals, weakerActiveAnimals)
                 map.moveAllAnimals();
                 ///2. (ew) zmienianie się żyznych pól przy martwych zwierzakach
