@@ -18,9 +18,15 @@ public class Animal implements WorldElement{
     public void addEnergy(int energy) {
         this.energy += energy;
     }
+
     public int[] getGenes() {
         return genes;
     }
+
+    public void addChild(Animal animal) {
+        children.add(animal);
+    }
+
     public Animal(Vector2d position, int geneLength, int startingEnergy) {
         this.direction = random.nextInt(8);
         this.position = position;
@@ -97,7 +103,6 @@ public class Animal implements WorldElement{
             else return false;
         }else return false;
     }
-
     public MapDirection geneToMapDirection(int direction) {
         return switch(direction){
             case 0 -> MapDirection.NORTH;
@@ -110,8 +115,5 @@ public class Animal implements WorldElement{
             case 7 -> MapDirection.NORTH_WEST;
             default -> throw new IllegalStateException("Unexpected value: " + direction);
         };
-    }
-    public String toString(){
-        return "A";
     }
 }

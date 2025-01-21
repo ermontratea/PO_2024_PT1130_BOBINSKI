@@ -18,6 +18,20 @@ public class Simulation implements Runnable {
         this.plantPerDay = plantPerDay;
 
     }
+//    public void runDay(){
+//        map.moveAllAnimals();
+//        ///2. (ew) zmienianie się żyznych pól przy martwych zwierzakach
+//        //3. jedzenie roślin
+//        map.dinner();
+//        ///4. rozmnażanie się zwierząt
+//        map.sexyTime();
+//        // 5. rośnięcie roślin
+//        map.fillEarthWithPlants(plantPerDay);
+//        // 6. clearowanie wszystkich list z eventami, a także chyba grobów (chyba że zostają na kilka dni)
+//        map.clearLists();
+//        //koniec dnia
+//        day++;
+//    }
 
     @Override
     public void run() {

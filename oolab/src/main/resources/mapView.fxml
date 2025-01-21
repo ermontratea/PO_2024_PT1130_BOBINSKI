@@ -5,11 +5,13 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="agh.ics.oop.presenter.SimulationWindowController"
             minHeight="550.0" minWidth="850.0">
-
+<!--    <top><VBox><Button fx:id="pauseResumeButton" text="Pause" onAction="#onPauseResumeClicked" /></VBox></top>-->
     <center>
         <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER" prefWidth="500" prefHeight="300">
 <!--            <columnConstraints>-->
@@ -25,6 +27,17 @@
     <bottom>
         <Label fx:id="movementDescriptionLabel" text="Movement description will appear here." textAlignment="CENTER"/>
     </bottom>
+    <left>
+        <VBox spacing="10" alignment="CENTER">
+            <Label fx:id="animalAmountField"/>
+            <Label fx:id="grassAmountField"/>
+            <Label fx:id="freeSquareField"/>
+            <Label fx:id="averageEnergyField"/>
+            <Label fx:id="averageLifetimeField"/>
+            <Label fx:id="averageChildAmountField"/>
+        </VBox>
+
+    </left>
 
 
 </BorderPane>

@@ -19,9 +19,16 @@ public class Earth {
     private int energyToBirth;
     private int energyFromPlant;
     private int fertileArea;
+    private int allArea;
     private List<Vector2d> graveArea = new ArrayList<>();
     private final boolean swap;
-    private boolean deadBody;
+    private final boolean deadBody;
+    private final Set<Vector2d> freeLands = new HashSet<>();
+    private int sumOfEnergy;
+    private int deadAnimals = 0;
+    private int sumOfDeadAnimalsAge = 0;
+    private int allChilders = 0;
+
 
     protected final List<MapChangeListener> observers = new ArrayList<>();
     Random random = new Random();
@@ -30,12 +37,11 @@ public class Earth {
         return boundary;
     }
 
-    public int getEnergyToHealthy() {
-        return energyToHealthy;
-    }
-
     public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToHealthy, int energyToBirth, int energyFromPlant, boolean deadBody, boolean swap) {
         this.boundary = new Boundary(new Vector2d(0,0), new Vector2d(width-1,height-1));
+        this.deadBody = deadBody;
+        allArea = width*height;
+        sumOfEnergy = startingEnergy*animalAmount;
         if (!deadBody) {
             int equatorSizeHalf = height / 10;
             int center = height / 2;
@@ -67,7 +73,8 @@ public class Earth {
         this.energyFromPlant = energyFromPlant;
         fillEarthWithPlants(plantAmount);
         for (int i=0; i<animalAmount; i++) {
-            animals.add(new Animal(new Vector2d(random.nextInt(width), random.nextInt(height)),geneLength,startingEnergy));
+            Animal animal = new Animal(new Vector2d(random.nextInt(width), random.nextInt(height)),geneLength,startingEnergy);
+            animals.add(animal);
         }
         this.energyToHealthy = energyToHealthy;
         this.energyToBirth = energyToBirth;
@@ -83,13 +90,14 @@ public class Earth {
         fertileArea = (width * height) / 5;
         for (MapDirection direction : MapDirection.values()) {
             graveArea.add(direction.toUnitVector());
-            graveArea.add(new Vector2d(0,0));
         }
+        graveArea.add(new Vector2d(0,0));
         this.swap = swap;
-        this.deadBody=deadBody;
     }
     public int[] sex(Animal father, Animal mother) {
         if (mother.getEnergy() >= energyToHealthy) {
+            allChilders++;
+            allChilders++;
             int genesFromFather = (geneLength * father.getEnergy()) / (father.getEnergy() + mother.getEnergy());
             int[] newbornGenes = new int[geneLength];
             int[] fatherGenes = father.getGenes();
@@ -126,6 +134,8 @@ public class Earth {
             Animal newborn = new Animal(father.getPosition(), geneLength, 2*energyToBirth, newbornGenes);
             animals.add(newborn);
             mother.addEnergy( -energyToBirth );
+            mother.addChild(newborn);
+            father.addChild(newborn);
             father.addEnergy( -energyToBirth );
         }
     }
@@ -168,16 +178,19 @@ public class Earth {
             Animal animal = iterator.next();
             this.move(animal);
             if (animal.getEnergy()==0) {
+                deadAnimals++;
+                sumOfDeadAnimalsAge = sumOfDeadAnimalsAge + animal.getAge();
+                allChilders = allChilders - animal.getChildren().size();
                 graves.add(animal.getPosition());// Jeśli zwierzę umarło
                 iterator.remove();  // Bezpieczne usunięcie elementu
             }
         }
-        notifyObservers("Zwierzaki się ruszyły" + animals.size());
     }
 
     public void move(Animal animal) {
         Vector2d where = animal.move(this);
         if (!where.equals(Animal.DEATH_VECTOR)) {
+            sumOfEnergy--;
             if (grass.containsKey(where)) {
                 if (eventGrass.containsKey(where)) {
                     Animal opponent = eventGrass.get(where);
@@ -235,9 +248,9 @@ public class Earth {
         observers.remove(observer);
     }
 
-    protected void notifyObservers(String message) {
+    protected void notifyObservers(int animalAmount, int grassAmount, int freeSquare, int averageEnergy, int averageLifetime, int averageChildAmount) {
         for (MapChangeListener observer : observers) {
-            observer.mapChanged(this, message);
+            observer.mapChanged(this, animalAmount, grassAmount, freeSquare, averageEnergy, averageLifetime, averageChildAmount);
         }
     }
 
@@ -264,7 +277,19 @@ public class Earth {
         int[] result1 = fillLandWithPlants(unfruitfulLand, 0, remainingPlants);
         int stillRemainingPlants = result1[1];
         int[] result2 = fillLandWithPlants(fertileLand, currentFertileIndex, stillRemainingPlants);
+        int animalAmount = animals.size();
+        if (animalAmount == 0) {animalAmount = 1;}
+        notifyObservers(animals.size(), grass.size(), amountOfFreeLand(), sumOfEnergy * 1000 / animalAmount, sumOfDeadAnimalsAge * 1000 / Math.max(deadAnimals, 1), allChilders * 1000 / animalAmount);
     }
+
+    private int amountOfFreeLand() {
+        freeLands.clear();
+        freeLands.addAll(grass.keySet());
+        freeLands.addAll(activeAnimals.keySet());
+        return (allArea - freeLands.size());
+    }
+
+
     //metoda co próbuje zasadzić określoną liczbę roślinek na określonej ziemii (żyznej lub jałowej)
     private int[] fillLandWithPlants(List<Vector2d> land, int startingIndex, int remainingPlants){
         int currentIndex = startingIndex;
@@ -285,6 +310,7 @@ public class Earth {
 
     public void dinner(){
         for ( var eatingEvent : eventGrass.entrySet()){
+            sumOfEnergy = sumOfEnergy + energyFromPlant;
             eatPlant(eatingEvent.getValue(),eatingEvent.getKey());
         }
     }
@@ -303,20 +329,18 @@ public class Earth {
     ///DO NAPISANIA - może jednak zrobić enuma mapdirections
 
     public void fertileNearBodies() {
-        if (!graves.isEmpty()) {
-            unfruitfulLand.addAll(fertileLand);
-            fertileLand.clear();
-            // zaokrąglanie w góre
-            int landPerGrave = (fertileArea + graves.size() - 1) / graves.size();
-            landPerGrave = Math.min(9, landPerGrave);
-            for (Vector2d grave : graves) {
-                Collections.shuffle(graveArea);
-                for (int i = 0; i < landPerGrave; i++) {
-                    fertileLand.add(grave.add(graveArea.get(i)));
-                }
+        unfruitfulLand.addAll(fertileLand);
+        fertileLand.clear();
+        // zaokrąglanie w góre
+        int landPerGrave = (fertileArea + graves.size() - 1) / graves.size();
+        landPerGrave = Math.min(9, landPerGrave);
+        for (Vector2d grave : graves) {
+            Collections.shuffle(graveArea);
+            for (int i = 0; i < landPerGrave; i++) {
+                fertileLand.add(grave.add(graveArea.get(i)));
             }
-            unfruitfulLand.removeAll(fertileLand);
         }
+        unfruitfulLand.removeAll(fertileLand);
     }
     public boolean isOccupied(Vector2d position) {
         return grass.containsKey(position) || activeAnimals.containsKey(position);
@@ -341,6 +365,9 @@ public class Earth {
     public Set<Animal> getAnimals(){
         return animals;
     }
+    public int getAnimalsAmount() {
+        return animals.size();
+    }
     public Set<Vector2d> getGraves(){
         return graves;
     }
@@ -349,6 +376,9 @@ public class Earth {
     }
     public Map<Vector2d,Animal> getActiveAnimals(){
         return activeAnimals;
+    }
+    public int getEnergyToHealthy(){
+        return energyToHealthy;
     }
 
 }

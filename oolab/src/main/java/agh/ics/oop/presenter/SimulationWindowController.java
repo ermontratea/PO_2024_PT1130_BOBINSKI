@@ -4,8 +4,10 @@ import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -26,7 +28,6 @@ public class SimulationWindowController implements MapChangeListener {
     private Label simulationLabel;
     @FXML
     private GridPane mapGrid;
-
     @FXML
     private Label movementDescriptionLabel;
     private int xMin;
@@ -40,15 +41,30 @@ public class SimulationWindowController implements MapChangeListener {
     private int height;
     private boolean isInitialised=false;
     private int healthyEnergy;
+    @FXML
+    private Button pauseResumeButton;
+    private boolean isPaused = false;
+    private SimulationEngine engine;
+    @FXML
+    private Label animalAmountField;
+    @FXML
+    private Label grassAmountField;
+    @FXML
+    private Label freeSquareField;
+    @FXML
+    private Label mostPopularGeneField;
+    @FXML
+    private Label averageEnergyField;
+    @FXML
+    private Label averageLifetimeField;
+    @FXML
+    private Label averageChildAmountField;
 
 
     // Metoda do uruchamiania symulacji
     public void startSimulation(Simulation simulation) {
         SimulationEngine engine = new SimulationEngine(List.of(simulation));
-
-        new Thread(() -> {
-            engine.runSync();
-        }).start();
+        new Thread(() -> {engine.runSync();}).start();
     }
     @FXML
     private void onCloseButtonClicked() {
@@ -106,8 +122,6 @@ public class SimulationWindowController implements MapChangeListener {
                 } else {
                     background.setFill(Color.rgb(144, 160, 70));
                 }
-
-
                 Circle animalCircle = null;
                 if (map.isOccupied(pos) && map.objectAt(pos) instanceof Animal) {
                     Animal animal = (Animal) map.objectAt(pos);
@@ -125,14 +139,11 @@ public class SimulationWindowController implements MapChangeListener {
                     else{animalCircle = new Circle(cellHeight / 3);
                     animalCircle.setFill(Color.rgb(80, 40, 20));}
                 }
-
                 cellPane.getChildren().add(background);
                 if (animalCircle != null) {
                     cellPane.getChildren().add(animalCircle);
                 }
-
                 mapGrid.add(cellPane, i - xMin + 1, yMax - j + 1);
-
 
             }
         }
@@ -157,13 +168,30 @@ public class SimulationWindowController implements MapChangeListener {
     }
 
     @Override
-    public void mapChanged(Earth worldMap, String message) {
-
+    public void mapChanged(Earth worldMap, int animalAmount, int grassAmount, int freeSquare, int averageEnergy, int averageLifetime, int averageChildAmount) {
         setWorldMap(worldMap);
         Platform.runLater(() -> {
             clearGrid();
             drawMap();
-            movementDescriptionLabel.setText(message);
+            animalAmountField.setText("Ilość żywych zwierząt: " + animalAmount);
+            grassAmountField.setText("Ilość trawy: " + grassAmount);
+            freeSquareField.setText("Ilość wolnych pul: " + freeSquare);
+            averageEnergyField.setText("Średnia ilość energi: " + averageEnergy + " /1000");
+            averageLifetimeField.setText("Średni wiek życia: " + averageLifetime + " /1000");
+            averageChildAmountField.setText("Średnia ilość dzieci: " + averageChildAmount + " /1000");
         });
     }
+//
+//    @FXML
+//    private void onPauseResumeClicked() {
+//        if (isPaused) {
+//             // Wznowienie symulacji
+//            isPaused = false;
+//            pauseResumeButton.setText("Pause"); // Zmiana tekstu przycisku na "Pause"
+//        } else {
+//             // Pauza symulacji
+//            isPaused = true;
+//            pauseResumeButton.setText("Resume"); // Zmiana tekstu przycisku na "Resume"
+//        }
+//    }
 }
