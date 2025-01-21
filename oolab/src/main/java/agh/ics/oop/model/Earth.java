@@ -28,14 +28,23 @@ public class Earth {
     private int deadAnimals = 0;
     private int sumOfDeadAnimalsAge = 0;
     private int allChilders = 0;
+    private boolean running = true;
 
 
     protected final List<MapChangeListener> observers = new ArrayList<>();
     Random random = new Random();
 
-    public Boundary getBoundary() {
-        return boundary;
+    public boolean isGrassAt(Vector2d pos) {
+        return grass.containsKey(pos);
     }
+    public int genomToInt(Animal animal) {
+        int result = 0;
+        for (int i=0; i<geneLength; i++) {
+            result+= animal.getGenes()[i]*(geneLength-i-1);
+        }
+        return result;
+    }
+
 
     public Earth(int width, int height, int plantAmount, int animalAmount, int geneLength, int startingEnergy, int energyToHealthy, int energyToBirth, int energyFromPlant, boolean deadBody, boolean swap) {
         this.boundary = new Boundary(new Vector2d(0,0), new Vector2d(width-1,height-1));
@@ -332,7 +341,7 @@ public class Earth {
         unfruitfulLand.addAll(fertileLand);
         fertileLand.clear();
         // zaokrąglanie w góre
-        int landPerGrave = (fertileArea + graves.size() - 1) / graves.size();
+        int landPerGrave = (fertileArea + graves.size() - 1) / Math.max(graves.size(),1);
         landPerGrave = Math.min(9, landPerGrave);
         for (Vector2d grave : graves) {
             Collections.shuffle(graveArea);
@@ -379,6 +388,19 @@ public class Earth {
     }
     public int getEnergyToHealthy(){
         return energyToHealthy;
+    }
+
+    public Boundary getBoundary() {
+        return boundary;
+    }
+    public void stopRunning() {
+        running = false;
+    }
+    public void startRunning() {
+        running = true;
+    }
+    public boolean isRunning() {
+        return running;
     }
 
 }

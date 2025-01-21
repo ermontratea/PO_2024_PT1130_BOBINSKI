@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="agh.ics.oop.presenter.SimulationWindowController"
@@ -25,7 +26,10 @@
         </GridPane>
     </center>
     <bottom>
-        <Label fx:id="movementDescriptionLabel" text="Movement description will appear here." textAlignment="CENTER"/>
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Stop Simulation" onAction="#onStopSimulation" prefWidth="150"/>
+            <Button text="Start Simulation" onAction="#onStartSimulation" prefWidth="150"/>
+        </HBox>
     </bottom>
     <left>
         <VBox spacing="10" alignment="CENTER">
@@ -38,6 +42,11 @@
         </VBox>
 
     </left>
+    <right>
+        <VBox spacing="10" alignment="CENTER">
+            <Button text="Pokaż żyzne pola: " onAction="#onShowFertile" prefWidth="150"/>
+        </VBox>
+    </right>
 
 
 </BorderPane>

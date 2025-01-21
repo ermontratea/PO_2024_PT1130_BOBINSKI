@@ -117,7 +117,7 @@ public class SimulationWindowController implements MapChangeListener {
                 cellPane.setPrefSize(cellHeight, cellHeight);
 
                 Rectangle background = new Rectangle(cellHeight, cellHeight);
-                if (map.isOccupied(pos) && map.objectAt(pos) instanceof Grass) {
+                if (map.isOccupied(pos) && map.isGrassAt(pos)) {
                     background.setFill(Color.rgb(34, 139, 34));
                 } else {
                     background.setFill(Color.rgb(144, 160, 70));
@@ -181,6 +181,76 @@ public class SimulationWindowController implements MapChangeListener {
             averageChildAmountField.setText("Średnia ilość dzieci: " + averageChildAmount + " /1000");
         });
     }
+    @FXML
+    public void onStopSimulation(){
+        map.stopRunning();
+    }
+
+    @FXML
+    public void onStartSimulation(){
+        map.startRunning();
+    }
+    @FXML
+    public void onShowFertile() {
+        if (!map.isRunning()) {
+            Platform.runLater(() -> {
+                clearGrid();
+                labelConstruction();
+                columnsConstruction();
+                rowsConstruction();
+                addElementsRedFertile();
+                mapGrid.setGridLinesVisible(false);
+            });
+        }
+
+    }
+    public void addElementsRedFertile(){
+        for (int i = xMin; i <= xMax; i++) {
+            for (int j = yMax; j >= yMin; j--) {
+                Vector2d pos = new Vector2d(i, j);
+//
+                StackPane cellPane = new StackPane();
+                cellPane.setPrefSize(cellHeight, cellHeight);
+
+                Rectangle background = new Rectangle(cellHeight, cellHeight);
+                if (map.getFertileLand().contains(pos)){
+                    if (map.isOccupied(pos) && map.isGrassAt(pos)) {
+                        background.setFill(Color.rgb(139, 0, 0));
+                }   else {
+                        background.setFill(Color.rgb(255, 0, 0));
+                }}else{
+                    if (map.isOccupied(pos) && map.isGrassAt(pos)) {
+                        background.setFill(Color.rgb(34, 139, 34));
+                }   else {
+                        background.setFill(Color.rgb(144, 160, 70));
+                }}
+                Circle animalCircle = null;
+                if (map.isOccupied(pos) && map.objectAt(pos) instanceof Animal) {
+                    Animal animal = (Animal) map.objectAt(pos);
+                    int energy = animal.getEnergy();
+                    if (energy<=healthyEnergy/2){
+                        animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(205, 175, 149));}
+                    else if(energy<=healthyEnergy){
+                        animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(181, 101, 70));}
+                    else if(energy<=healthyEnergy*3/2){animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(150, 75, 0));}
+                    else if(energy<=healthyEnergy*2){animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(120, 60, 20));}
+                    else{animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(80, 40, 20));}
+                }
+                cellPane.getChildren().add(background);
+                if (animalCircle != null) {
+                    cellPane.getChildren().add(animalCircle);
+                }
+                mapGrid.add(cellPane, i - xMin + 1, yMax - j + 1);
+
+            }
+        }
+    }
+
 //
 //    @FXML
 //    private void onPauseResumeClicked() {

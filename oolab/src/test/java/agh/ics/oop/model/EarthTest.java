@@ -12,7 +12,7 @@ class EarthTest {
         int width = 10;
         int height = 10;
 
-        Earth earth = new Earth(width, height, 0, 0, 8, 10, 5, 3, 2, false);
+        Earth earth = new Earth(width, height, 0, 0, 8, 10, 5, 3, 2, false, false);
 
         assertFalse(earth.getFertileLand().isEmpty());
         assertFalse(earth.getFertileLand().isEmpty());
@@ -20,7 +20,7 @@ class EarthTest {
     }
     @Test
     void fillEarthWithPlantsAddsGrass() {
-        Earth earth = new Earth(10, 10, 0, 0, 8, 10, 5, 3, 2, false);
+        Earth earth = new Earth(10, 10, 0, 0, 8, 10, 5, 3, 2, false, false);
 
         earth.fillEarthWithPlants(20);
 
@@ -29,7 +29,7 @@ class EarthTest {
 
     @Test
     void moveAroundEarthWrapsHorizontally() {
-        Earth earth = new Earth(10, 10, 0, 0, 8, 10, 5, 3, 2, false);
+        Earth earth = new Earth(10, 10, 0, 0, 8, 10, 5, 3, 2, false, false);
 
         Vector2d newPosition = earth.moveAroundEarth(new Vector2d(-1, 5));
 
@@ -38,7 +38,7 @@ class EarthTest {
 
     @Test
     void canMoveToValidPosition() {
-        Earth earth = new Earth(10, 10, 0, 0, 8, 10, 5, 3, 2, false);
+        Earth earth = new Earth(10, 10, 0, 0, 8, 10, 5, 3, 2, false, false);
         Vector2d validPosition = new Vector2d(5, 5);
 
         boolean result = earth.canMoveTo(validPosition);
@@ -48,7 +48,7 @@ class EarthTest {
 
     @Test
     void canMoveToInvalidPosition() {
-        Earth earth = new Earth(10, 10, 0, 0, 8, 10, 5, 3, 2, false);
+        Earth earth = new Earth(10, 10, 0, 0, 8, 10, 5, 3, 2, false, false);
         Vector2d invalidPosition = new Vector2d(5, 11);
 
         boolean result = earth.canMoveTo(invalidPosition);
@@ -58,7 +58,7 @@ class EarthTest {
 
     @Test
     void moveAnimalRemovesDeadAnimal() {
-        Earth earth = new Earth(10, 10, 0, 1, 8, 0, 5, 3, 2, false);
+        Earth earth = new Earth(10, 10, 0, 1, 8, 0, 5, 3, 2, false, false);
         Animal animal = earth.getAnimals().iterator().next();
 
         earth.moveAllAnimals();
@@ -69,7 +69,7 @@ class EarthTest {
 
     @Test
     void dinnerFeedsAnimalAndRemovesGrass() {
-        Earth earth = new Earth(5, 5, 25, 1, 8, 10, 5, 3, 2, false);
+        Earth earth = new Earth(5, 5, 25, 1, 8, 10, 5, 3, 2, false, false);
         Animal animal = earth.getAnimals().iterator().next();
         earth.move(animal);
         Vector2d grassPosition = animal.getPosition();
@@ -83,7 +83,7 @@ class EarthTest {
 
     @Test
     void clearListsRemovesAllTemporaryData() {
-        Earth earth = new Earth(10, 10, 0, 1, 8, 10, 5, 3, 2, false);
+        Earth earth = new Earth(10, 10, 0, 1, 8, 10, 5, 3, 2, false, false);
         earth.moveAllAnimals();
 
         earth.clearLists();
@@ -92,32 +92,4 @@ class EarthTest {
         assertTrue(earth.getActiveAnimals().isEmpty());
     }
 
-
-    @Test
-    void moveAllAnimals() {
-    }
-
-    @Test
-    void move() {
-    }
-
-    @Test
-    void canMoveTo() {
-    }
-
-    @Test
-    void addObserver() {
-    }
-
-    @Test
-    void removeObserver() {
-    }
-
-    @Test
-    void notifyObservers() {
-    }
-
-    @Test
-    void fertileNearBodies() {
-    }
 }

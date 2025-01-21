@@ -37,7 +37,7 @@ class AnimalTest {
         int startingEnergy = 50;
         int energyToBreed = 20;
         int energyToBirth = 10;
-        Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false);
+        Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false, false);
         Animal animal = new Animal(position, geneLength, startingEnergy);
 
         animal.move(earth);
@@ -51,7 +51,7 @@ class AnimalTest {
         int startingEnergy = 0;
         int energyToBreed = 20;
         int energyToBirth = 10;
-        Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false);
+        Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false, false);
         Animal animal = new Animal(position, geneLength, startingEnergy);
 
         Vector2d result = animal.move(earth);
@@ -66,7 +66,7 @@ class AnimalTest {
         int startingEnergy = 1;
         int energyToBreed = 20;
         int energyToBirth = 10;
-        Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false);
+        Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false, false);
         Animal animal = new Animal(position, geneLength, startingEnergy);
 
         Vector2d result = animal.move(earth);
@@ -107,7 +107,7 @@ class AnimalTest {
     @Test
     void animalMovementUpdatesPosition() {
         Vector2d position = new Vector2d(2, 3);
-        Earth earth = new Earth(10, 10, 0, 0, 8, 50, 20, 10, 5, false);
+        Earth earth = new Earth(10, 10, 0, 0, 8, 50, 20, 10, 5, false, false);
         Animal animal = new Animal(position, 8, 50);
 
         Vector2d newPosition = animal.move(earth);
@@ -119,11 +119,11 @@ class AnimalTest {
     @Test
     void correctAnimalMovementNearBorder() {
         Vector2d position = new Vector2d(0, 0);
-        Earth earth = new Earth(10, 10, 0, 0, 8, 50, 20, 10, 5, false);
+        Earth earth = new Earth(10, 10, 0, 0, 8, 50, 20, 10, 5, false, false);
         Animal animal = new Animal(position, 8, 50);
         int startingDirection = animal.getDirection();
         int firstGene = animal.getCurrentGene();
-        int firstMove = (startingDirection+firstGene)%8;
+        int firstMove = (startingDirection+firstGene-1)%8;
 
         Vector2d newPosition = animal.move(earth);
 
@@ -167,7 +167,7 @@ class AnimalTest {
     void isBetterAnimalEqualEnergyComparesAge() {
         Vector2d position = new Vector2d(2, 3);
         Animal animal1 = new Animal(position, 8, 51);
-        animal1.move(new Earth(10, 10, 0, 0, 8, 50, 20, 10, 5, false));
+        animal1.move(new Earth(10, 10, 0, 0, 8, 50, 20, 10, 5, false, false));
         Animal animal2 = new Animal(position, 8, 50);
 
         boolean result = animal1.isBetterAnimal(animal2);
@@ -205,7 +205,7 @@ class AnimalTest {
         int startingEnergy = 70;
         int energyToBreed = 30;
         int energyToBirth = 5;
-        Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false);
+        Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false, false);
         Animal animal = new Animal(position, geneLength, startingEnergy);
         int startingGene = animal.getCurrentGene();
 
@@ -220,7 +220,7 @@ class AnimalTest {
         int startingEnergy = 50;
         int energyToBreed = 20;
         int energyToBirth = 10;
-        Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false);
+        Earth earth = new Earth(10, 10, 0, 0, geneLength, startingEnergy, energyToBreed, energyToBirth, 5, false, false);
         Animal animal = new Animal(position, geneLength, startingEnergy);
         int startingGene = animal.getCurrentGene();
 
