@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="agh.ics.oop.presenter.SimulationWindowController"
+            minHeight="550.0" minWidth="850.0">
+<!--    <top><VBox><Button fx:id="pauseResumeButton" text="Pause" onAction="#onPauseResumeClicked" /></VBox></top>-->
+    <center>
+        <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER" prefWidth="500" prefHeight="300">
+<!--            <columnConstraints>-->
+<!--                <ColumnConstraints prefWidth="100" />-->
+<!--                <ColumnConstraints prefWidth="100" />-->
+<!--            </columnConstraints>-->
+<!--            <rowConstraints>-->
+<!--                <RowConstraints prefHeight="100" />-->
+<!--                <RowConstraints prefHeight="100" />-->
+<!--            </rowConstraints>-->
+        </GridPane>
+    </center>
+    <bottom>
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Stop Simulation" onAction="#onStopSimulation" prefWidth="150"/>
+            <Button text="Start Simulation" onAction="#onStartSimulation" prefWidth="150"/>
+        </HBox>
+    </bottom>
+    <left>
+        <VBox spacing="10" alignment="CENTER">
+            <Label fx:id="dayField"/>
+            <Label fx:id="animalAmountField"/>
+            <Label fx:id="grassAmountField"/>
+            <Label fx:id="freeSquareField"/>
+            <Label fx:id="averageEnergyField"/>
+            <Label fx:id="averageLifetimeField"/>
+            <Label fx:id="averageChildAmountField"/>
+        </VBox>
+
+    </left>
+    <right>
+        <VBox spacing="10" alignment="CENTER">
+            <Button text="Pokaż żyzne pola: " onAction="#onShowFertile" prefWidth="150"/>
+            <Label text="Zwierzak którego chcesz śledzić: "/>
+            <TextField fx:id="makingSlave" prefWidth="300"/>
+            <Button text="Zacznij śledzić" onAction="#onMakeSlave" prefWidth="150"/>
+            <Label fx:id="slaveGenom"/>
+            <Label fx:id="slaveActiveGen"/>
+            <Label fx:id="slaveEnergy"/>
+            <Label fx:id="slaveEatedPlants"/>
+            <Label fx:id="slaveChildrens"/>
+            <Label fx:id="slaveDescendants"/>
+            <Label fx:id="slaveAge"/>
+            <Label fx:id="slaveDayOfDeath"/>
+            <Button text="Przestań śledzić" onAction="#onReleaseSlave" prefWidth="150"/>
+        </VBox>
+    </right>
+
+
+</BorderPane>
