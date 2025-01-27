@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class SimulationPresenter  {
+public class SimulationPresenter {
     private Earth map;
     @FXML
     private ChoiceBox<String> configChoiceBox;
@@ -64,7 +64,7 @@ public class SimulationPresenter  {
     public void initialize() {
         deadBodyField.setValue(false);
         swapField.setValue(false);
-        Config config1 = new Config(10,10,5,5,4,10,5,4, 3, 5, false, false);
+        Config config1 = new Config(10, 10, 5, 5, 4, 10, 5, 4, 3, 5, false, false);
         Config config2 = new Config(5, 5, 3, 3, 10, 6, 5, 3, 2, 8, true, true);
         Config config3 = new Config(25, 25, 40, 12, 6, 10, 8, 6, 4, 30, false, true);
         Config config4 = new Config(50, 50, 80, 24, 8, 15, 10, 8, 5, 60, true, false);
@@ -97,7 +97,7 @@ public class SimulationPresenter  {
     }
 
     @FXML
-    private void onSimulationStartClicked() throws Exception {
+    private void onSimulationStartClicked() throws Exception { // throws co?
         int width = Integer.parseInt(mapWidthField.getText());
         int height = Integer.parseInt(mapHeightField.getText());
         int plantAmount = Integer.parseInt(plantAmountField.getText());
@@ -122,7 +122,7 @@ public class SimulationPresenter  {
             map.addObserver(controller);
 
 
-            Simulation simulation = new Simulation(plantPerDay,map);
+            Simulation simulation = new Simulation(plantPerDay, map);
             controller.startSimulation(simulation);
             Stage primaryStage = new Stage();
             var scene = new Scene(viewRoot);
@@ -131,12 +131,12 @@ public class SimulationPresenter  {
             primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
             primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
             primaryStage.show();
-        }catch (IOException e){
-            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace(); // czy to dobry wybór?
         }
     }
 
-    private static class Config {
+    private static class Config { // czy to nie powinien być rekord?
         int mapWidth, mapHeight, plantAmount, animalAmount, geneLength;
         int startingEnergy, energyToHealthy, energyToBirth, energyFromPlant, plantPerDay;
         boolean deadBody, swap;

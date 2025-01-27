@@ -21,8 +21,8 @@ public class Simulation implements Runnable {
 
     @Override
     public void run() {
-        int day =1;
-        while (day<101) {
+        int day = 1;
+        while (day < 101) {
             try {
 
                 //1. umieranie i ruszanie zwierzaków (tworzenie się list eventGrass i activeAnimals, weakerActiveAnimals)
@@ -38,7 +38,7 @@ public class Simulation implements Runnable {
                 map.fillEarthWithPlants(plantPerDay);
                 // 6. clearowanie wszystkich list z eventami, a także chyba grobów (chyba że zostają na kilka dni)
                 while (!map.isRunning()) {
-                    Thread.sleep(1000);
+                    Thread.sleep(1000); // busy-wait?
                 }
                 Thread.sleep(500);
                 map.clearLists();
@@ -46,8 +46,8 @@ public class Simulation implements Runnable {
                 //koniec dnia
                 day++;
                 map.nextDay();
-            }catch (InterruptedException e){
-                System.err.print(e.getMessage());
+            } catch (InterruptedException e) {
+                System.err.print(e.getMessage()); // czy to dobry wybór?
             }
         }
     }

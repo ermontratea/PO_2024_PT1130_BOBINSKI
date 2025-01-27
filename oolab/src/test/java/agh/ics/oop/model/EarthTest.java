@@ -16,8 +16,9 @@ class EarthTest {
 
         assertFalse(earth.getFertileLand().isEmpty());
         assertFalse(earth.getFertileLand().isEmpty());
-        assertEquals(width*height, earth.getUnfruitfulLand().size()+earth.getFertileLand().size());
+        assertEquals(width * height, earth.getUnfruitfulLand().size() + earth.getFertileLand().size());
     }
+
     @Test
     void fillEarthWithPlantsAddsGrass() {
         Earth earth = new Earth(10, 10, 0, 0, 8, 10, 5, 3, 2, false, false);

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Vector2dTest {
     @Test
-    void equals(){
+    void equals() {
         Vector2d vector1 = new Vector2d(1, 2);
         Vector2d vector2 = new Vector2d(1, 2);
         Vector2d vector3 = new Vector2d(2, 3);
@@ -14,6 +14,7 @@ class Vector2dTest {
         assertEquals(vector1, vector2);
         assertNotEquals(vector1, vector3);
     }
+
     @Test
     void testToString() {
         Vector2d vector1 = new Vector2d(3, 7);
@@ -80,33 +81,36 @@ class Vector2dTest {
     }
 
     @Test
-    void lowerLeft(){
+    void lowerLeft() {
         Vector2d vector1 = new Vector2d(5, 2);
         Vector2d vector2 = new Vector2d(3, 4);
 
         Vector2d result = vector1.lowerLeft(vector2);
 
-        assertEquals(new Vector2d(3,2), result);
-        assertNotEquals(new Vector2d(3,4), result);
+        assertEquals(new Vector2d(3, 2), result);
+        assertNotEquals(new Vector2d(3, 4), result);
     }
+
     @Test
-    void opposite(){
+    void opposite() {
         Vector2d vector1 = new Vector2d(1, 2);
 
         Vector2d result = vector1.opposite();
 
-        assertEquals(new Vector2d(-1,-2), result);
+        assertEquals(new Vector2d(-1, -2), result);
     }
+
     @Test
-    void getX(){
+    void getX() {
         Vector2d vector1 = new Vector2d(3, 8);
 
         int result = vector1.getX();
 
         assertEquals(3, result);
     }
+
     @Test
-    void getY(){
+    void getY() {
         Vector2d vector1 = new Vector2d(2, 4);
 
         int result = vector1.getY();

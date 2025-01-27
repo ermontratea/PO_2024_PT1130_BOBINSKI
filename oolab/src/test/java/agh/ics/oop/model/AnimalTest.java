@@ -21,6 +21,7 @@ class AnimalTest {
         assertEquals(0, animal.getChildren().size());
 
     }
+
     @Test
     void addEnergy() {
         Vector2d position = new Vector2d(0, 0);
@@ -30,6 +31,7 @@ class AnimalTest {
 
         assertEquals(15, animal.getEnergy());
     }
+
     @Test
     void animalMoveReducesEnergy() {
         Vector2d position = new Vector2d(2, 3);
@@ -44,6 +46,7 @@ class AnimalTest {
 
         assertEquals(startingEnergy - 1, animal.getEnergy());
     }
+
     @Test
     void animalDiesWhenEnergyZero() {
         Vector2d position = new Vector2d(2, 3);
@@ -59,6 +62,7 @@ class AnimalTest {
         assertEquals(Animal.DEATH_VECTOR, result);
         assertEquals(0, animal.getEnergy());
     }
+
     @Test
     void animalCanMoveOnLastEnergy() {
         Vector2d position = new Vector2d(2, 3);
@@ -74,6 +78,7 @@ class AnimalTest {
         assertNotEquals(Animal.DEATH_VECTOR, result);
         assertEquals(0, animal.getEnergy());
     }
+
     @Test
     void getPosition() {
         Vector2d position = new Vector2d(2, 3);
@@ -83,6 +88,7 @@ class AnimalTest {
 
         assertEquals(position, result);
     }
+
     @Test
     void getEnergy() {
         Vector2d position = new Vector2d(2, 3);
@@ -93,6 +99,7 @@ class AnimalTest {
 
         assertEquals(startingEnergy, result);
     }
+
     ///napisać jak napiszamy rozmnażanie, wtedy ilość dzieci się zmienia (testowanie dzieci)
     @Test
     void getChildren() {
@@ -114,6 +121,7 @@ class AnimalTest {
 
         assertNotEquals(position, newPosition);
     }
+
     ///fajne by były testy, które testują wchodzenie w bieguny i przechodzenie na drugi bok mapy, ale nie da się zbytnio tego zrobić
     /// gdy początkowy kierunek zwierzaka jest losowy, trzeba by było zrobić specjalny setter/nowy konstruktor dla tych testów
     @Test
@@ -123,34 +131,30 @@ class AnimalTest {
         Animal animal = new Animal(position, 8, 50);
         int startingDirection = animal.getDirection();
         int firstGene = animal.getCurrentGene();
-        int firstMove = (startingDirection+firstGene-1)%8;
+        int firstMove = (startingDirection + firstGene - 1) % 8;
 
         Vector2d newPosition = animal.move(earth);
 
-        if (firstMove==6){
-        assertEquals(new Vector2d(9,0), newPosition);}
-        else if (firstMove==5){
+        if (firstMove == 6) {
+            assertEquals(new Vector2d(9, 0), newPosition);
+        } else if (firstMove == 5) {
             assertEquals(position, newPosition);
-            assertEquals(1,animal.getDirection());
-        }
-        else if (firstMove==4){
+            assertEquals(1, animal.getDirection());
+        } else if (firstMove == 4) {
             assertEquals(position, newPosition);
-            assertEquals(0,animal.getDirection());
-        }
-        else if (firstMove==3){
+            assertEquals(0, animal.getDirection());
+        } else if (firstMove == 3) {
             assertEquals(position, newPosition);
-            assertEquals(7,animal.getDirection());
+            assertEquals(7, animal.getDirection());
+        } else if (firstMove == 0) {
+            assertEquals(new Vector2d(0, 1), newPosition);
+        } else if (firstMove == 1) {
+            assertEquals(new Vector2d(1, 1), newPosition);
+        } else if (firstMove == 2) {
+            assertEquals(new Vector2d(1, 0), newPosition);
+        } else {
+            assertEquals(new Vector2d(9, 1), newPosition);
         }
-        else if (firstMove==0){
-            assertEquals(new Vector2d(0,1), newPosition);
-        }
-        else if (firstMove==1){
-            assertEquals(new Vector2d(1,1), newPosition);
-        }
-        else if (firstMove==2){
-            assertEquals(new Vector2d(1,0), newPosition);
-        }
-        else{assertEquals(new Vector2d(9,1), newPosition);}
     }
 
     @Test
@@ -163,6 +167,7 @@ class AnimalTest {
 
         assertTrue(result);
     }
+
     @Test
     void isBetterAnimalEqualEnergyComparesAge() {
         Vector2d position = new Vector2d(2, 3);
@@ -174,6 +179,7 @@ class AnimalTest {
 
         assertTrue(result);
     }
+
     ///trzeba dodać rozmnażanie żeby działało
 //    @Test
 //    void isBetterAnimalEqualEnergyEqualAgeComparesChildren() {
@@ -198,6 +204,7 @@ class AnimalTest {
         assertEquals(MapDirection.WEST, animal.geneToMapDirection(6));
         assertEquals(MapDirection.NORTH_WEST, animal.geneToMapDirection(7));
     }
+
     @Test
     void currentGeneChanges() {
         Vector2d position = new Vector2d(3, 5);
@@ -213,6 +220,7 @@ class AnimalTest {
 
         assertNotEquals(startingGene, animal.getCurrentGene());
     }
+
     @Test
     void currentGeneCycles() {
         Vector2d position = new Vector2d(2, 3);

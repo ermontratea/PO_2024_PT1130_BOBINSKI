@@ -41,7 +41,7 @@ public class SimulationWindowController implements MapChangeListener {
     private double cellHeight;
     private int width;
     private int height;
-    private boolean isInitialised=false;
+    private boolean isInitialised = false;
     private int healthyEnergy;
     @FXML
     private Button pauseResumeButton;
@@ -86,55 +86,62 @@ public class SimulationWindowController implements MapChangeListener {
     private Animal slave = null;
 
 
-
     // Metoda do uruchamiania symulacji
     public void startSimulation(Simulation simulation) {
         SimulationEngine engine = new SimulationEngine(List.of(simulation));
-        new Thread(() -> {engine.runSync();}).start();
+        new Thread(() -> {
+            engine.runSync();
+        }).start();
     }
+
     @FXML
     private void onCloseButtonClicked() {
         Stage stage = (Stage) simulationLabel.getScene().getWindow();
         stage.close();
     }
+
     public void setWorldMap(Earth map) {
-        this.cellHeight=calculateCellSize(mapGrid.getWidth(),mapGrid.getHeight());
+        this.cellHeight = calculateCellSize(mapGrid.getWidth(), mapGrid.getHeight());
         this.map = map;
-        this.width=map.getBoundary().upperRight().getX()+1;
-        this.height=map.getBoundary().upperRight().getY()+1;
-        xMin=0;
-        yMin=0;
-        xMax=width-1;
-        yMax=height-1;
-        mapWidth=this.width;
-        mapHeight=this.height;
+        this.width = map.getBoundary().upperRight().getX() + 1;
+        this.height = map.getBoundary().upperRight().getY() + 1;
+        xMin = 0;
+        yMin = 0;
+        xMax = width - 1;
+        yMax = height - 1;
+        mapWidth = this.width;
+        mapHeight = this.height;
         healthyEnergy = this.map.getEnergyToHealthy();
 
     }
-    public void labelConstruction(){
+
+    public void labelConstruction() {
         mapGrid.getColumnConstraints().add(new ColumnConstraints(this.cellHeight));
         mapGrid.getRowConstraints().add(new RowConstraints(cellHeight));
         Label label = new Label("y/x");
         mapGrid.add(label, 0, 0);
         GridPane.setHalignment(label, HPos.CENTER);
     }
-    public void columnsConstruction(){
-        for(int i=0; i<mapWidth; i++){
-            Label label = new Label(Integer.toString(i+xMin));
+
+    public void columnsConstruction() {
+        for (int i = 0; i < mapWidth; i++) {
+            Label label = new Label(Integer.toString(i + xMin));
             GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(this.cellHeight ));
-            mapGrid.add(label, i+1, 0);
+            mapGrid.getColumnConstraints().add(new ColumnConstraints(this.cellHeight));
+            mapGrid.add(label, i + 1, 0);
         }
     }
-    public void rowsConstruction(){
-        for(int i=0; i<mapHeight; i++){
-            Label label = new Label(Integer.toString(yMax-i));
+
+    public void rowsConstruction() {
+        for (int i = 0; i < mapHeight; i++) {
+            Label label = new Label(Integer.toString(yMax - i));
             GridPane.setHalignment(label, HPos.CENTER);
             mapGrid.getRowConstraints().add(new RowConstraints(this.cellHeight));
-            mapGrid.add(label, 0, i+1);
+            mapGrid.add(label, 0, i + 1);
         }
     }
-    public void addElements(){
+
+    public void addElements() {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Vector2d pos = new Vector2d(i, j);
@@ -152,28 +159,33 @@ public class SimulationWindowController implements MapChangeListener {
                 Circle animalCircle = null;
                 if (map.isOccupied(pos) && map.objectAt(pos) instanceof Animal) {
                     Animal animal = (Animal) map.objectAt(pos);
-                    if (slave!=null && slave.getPosition().equals(pos)){
+                    if (slave != null && slave.getPosition().equals(pos)) {
                         updateSlave(slave);
-                        if (slave.getEnergy()==0){
-                            slaveDayOfDeath.setText("Dzień śmierci: "+ map.getDay());
+                        if (slave.getEnergy() == 0) {
+                            slaveDayOfDeath.setText("Dzień śmierci: " + map.getDay());
                             slave.addEnergy(-1);
                         }
                         animalCircle = new Circle(cellHeight / 3);
                         animalCircle.setFill(Color.rgb(255, 0, 0));
-                    }else{
-                    int energy = animal.getEnergy();
-                    if (energy<=healthyEnergy/2){
-                    animalCircle = new Circle(cellHeight / 3);
-                    animalCircle.setFill(Color.rgb(205, 175, 149));}
-                    else if(energy<=healthyEnergy){
-                        animalCircle = new Circle(cellHeight / 3);
-                        animalCircle.setFill(Color.rgb(181, 101, 70));}
-                    else if(energy<=healthyEnergy*3/2){animalCircle = new Circle(cellHeight / 3);
-                        animalCircle.setFill(Color.rgb(150, 75, 0));}
-                    else if(energy<=healthyEnergy*2){animalCircle = new Circle(cellHeight / 3);
-                    animalCircle.setFill(Color.rgb(120, 60, 20));}
-                    else{animalCircle = new Circle(cellHeight / 3);
-                    animalCircle.setFill(Color.rgb(80, 40, 20));}}
+                    } else {
+                        int energy = animal.getEnergy();
+                        if (energy <= healthyEnergy / 2) {
+                            animalCircle = new Circle(cellHeight / 3);
+                            animalCircle.setFill(Color.rgb(205, 175, 149));
+                        } else if (energy <= healthyEnergy) {
+                            animalCircle = new Circle(cellHeight / 3);
+                            animalCircle.setFill(Color.rgb(181, 101, 70));
+                        } else if (energy <= healthyEnergy * 3 / 2) {
+                            animalCircle = new Circle(cellHeight / 3);
+                            animalCircle.setFill(Color.rgb(150, 75, 0));
+                        } else if (energy <= healthyEnergy * 2) {
+                            animalCircle = new Circle(cellHeight / 3);
+                            animalCircle.setFill(Color.rgb(120, 60, 20));
+                        } else {
+                            animalCircle = new Circle(cellHeight / 3);
+                            animalCircle.setFill(Color.rgb(80, 40, 20));
+                        }
+                    }
                 }
                 cellPane.getChildren().add(background);
                 if (animalCircle != null) {
@@ -184,6 +196,7 @@ public class SimulationWindowController implements MapChangeListener {
             }
         }
     }
+
     private void drawMap() {
         labelConstruction();
         columnsConstruction();
@@ -191,13 +204,14 @@ public class SimulationWindowController implements MapChangeListener {
         addElements();
         mapGrid.setGridLinesVisible(false);
     }
+
     private double calculateCellSize(double gridWidth, double gridHeight) {
-        double cellWidth = gridWidth / (mapWidth+2);
-        double cellHeight = gridHeight / (mapHeight+2);
+        double cellWidth = gridWidth / (mapWidth + 2);
+        double cellHeight = gridHeight / (mapHeight + 2);
         return Math.min(cellWidth, cellHeight); // Pola kwadratowe
     }
 
-    private void clearGrid(){
+    private void clearGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0));
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
@@ -209,7 +223,7 @@ public class SimulationWindowController implements MapChangeListener {
         Platform.runLater(() -> {
             clearGrid();
             drawMap();
-            dayField.setText("Dzień:"+map.getDay());
+            dayField.setText("Dzień:" + map.getDay());
             animalAmountField.setText("Ilość żywych zwierząt: " + animalAmount);
             grassAmountField.setText("Ilość trawy: " + grassAmount);
             freeSquareField.setText("Ilość wolnych pól: " + freeSquare);
@@ -218,15 +232,17 @@ public class SimulationWindowController implements MapChangeListener {
             averageChildAmountField.setText("Średnia ilość dzieci: " + averageChildAmount + " /1000");
         });
     }
+
     @FXML
-    public void onStopSimulation(){
+    public void onStopSimulation() {
         map.stopRunning();
     }
 
     @FXML
-    public void onStartSimulation(){
+    public void onStartSimulation() {
         map.startRunning();
     }
+
     @FXML
     public void onShowFertile() {
         if (!map.isRunning()) {
@@ -241,7 +257,8 @@ public class SimulationWindowController implements MapChangeListener {
         }
 
     }
-    public void addElementsRedFertile(){
+
+    public void addElementsRedFertile() {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Vector2d pos = new Vector2d(i, j);
@@ -250,34 +267,40 @@ public class SimulationWindowController implements MapChangeListener {
                 cellPane.setPrefSize(cellHeight, cellHeight);
 
                 Rectangle background = new Rectangle(cellHeight, cellHeight);
-                if (map.getFertileLand().contains(pos)){
+                if (map.getFertileLand().contains(pos)) {
                     if (map.isOccupied(pos) && map.isGrassAt(pos)) {
                         background.setFill(Color.rgb(139, 0, 0));
-                }   else {
+                    } else {
                         background.setFill(Color.rgb(255, 0, 0));
-                }}else{
+                    }
+                } else {
                     if (map.isOccupied(pos) && map.isGrassAt(pos)) {
                         background.setFill(Color.rgb(34, 139, 34));
-                }   else {
+                    } else {
                         background.setFill(Color.rgb(144, 160, 70));
-                }}
+                    }
+                }
                 Circle animalCircle = null;
                 if (map.isOccupied(pos) && map.objectAt(pos) instanceof Animal) {
                     Animal animal = (Animal) map.objectAt(pos);
 
                     int energy = animal.getEnergy();
-                    if (energy<=healthyEnergy/2){
+                    if (energy <= healthyEnergy / 2) {
                         animalCircle = new Circle(cellHeight / 3);
-                        animalCircle.setFill(Color.rgb(205, 175, 149));}
-                    else if(energy<=healthyEnergy){
+                        animalCircle.setFill(Color.rgb(205, 175, 149));
+                    } else if (energy <= healthyEnergy) {
                         animalCircle = new Circle(cellHeight / 3);
-                        animalCircle.setFill(Color.rgb(181, 101, 70));}
-                    else if(energy<=healthyEnergy*3/2){animalCircle = new Circle(cellHeight / 3);
-                        animalCircle.setFill(Color.rgb(150, 75, 0));}
-                    else if(energy<=healthyEnergy*2){animalCircle = new Circle(cellHeight / 3);
-                        animalCircle.setFill(Color.rgb(120, 60, 20));}
-                    else{animalCircle = new Circle(cellHeight / 3);
-                        animalCircle.setFill(Color.rgb(80, 40, 20));}
+                        animalCircle.setFill(Color.rgb(181, 101, 70));
+                    } else if (energy <= healthyEnergy * 3 / 2) {
+                        animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(150, 75, 0));
+                    } else if (energy <= healthyEnergy * 2) {
+                        animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(120, 60, 20));
+                    } else {
+                        animalCircle = new Circle(cellHeight / 3);
+                        animalCircle.setFill(Color.rgb(80, 40, 20));
+                    }
                 }
                 cellPane.getChildren().add(background);
                 if (animalCircle != null) {
@@ -288,10 +311,11 @@ public class SimulationWindowController implements MapChangeListener {
             }
         }
     }
+
     @FXML
     public void onMakeSlave() {
 
-        if (!map.isRunning() && 0 < Integer.parseInt(makingSlave.getText()) && Integer.parseInt(makingSlave.getText()) < map.getAnimalsAmount() ) {
+        if (!map.isRunning() && 0 < Integer.parseInt(makingSlave.getText()) && Integer.parseInt(makingSlave.getText()) < map.getAnimalsAmount()) {
             slave = (Animal) map.getAnimals().toArray()[Integer.parseInt(makingSlave.getText())];
             updateSlave(slave);
             Platform.runLater(() -> {
@@ -309,9 +333,9 @@ public class SimulationWindowController implements MapChangeListener {
         slaveGenom.setText("Genom zwierzaka: " + Arrays.toString(animal.getGenes()));
         slaveActiveGen.setText("Aktywowana część genomu: " + animal.getCurrentGene());
         slaveEnergy.setText("Energia zwierzaka: " + animal.getEnergy());
-        slaveEatedPlants.setText("Zjedzone rośliny: "+animal.getEatenGrass());
+        slaveEatedPlants.setText("Zjedzone rośliny: " + animal.getEatenGrass());
         slaveChildrens.setText("Ilość dzieci: " + animal.getChildren().size());
-        slaveDescendants.setText("Ilość potomków: "+ animal.getDescendants());
+        slaveDescendants.setText("Ilość potomków: " + animal.getDescendants());
         slaveAge.setText("Wiek: " + animal.getAge());
 
     }

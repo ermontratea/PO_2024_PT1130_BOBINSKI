@@ -9,16 +9,17 @@ public enum MapDirection {
     SOUTH_WEST,
     WEST,
     NORTH_WEST;
-    private final static Vector2d NORTH_VECTOR = new Vector2d(0,1);
-    private final static Vector2d NORTH_EAST_VECTOR = new Vector2d(1,1);
-    private final static Vector2d EAST_VECTOR = new Vector2d(1,0);
-    private final static Vector2d SOUTH_EAST_VECTOR = new Vector2d(1,-1);
-    private final static Vector2d SOUTH_VECTOR = new Vector2d(0,-1);
-    private final static Vector2d SOUTH_WEST_VECTOR = new Vector2d(-1,-1);
-    private final static Vector2d WEST_VECTOR = new Vector2d(-1,0);
-    private final static Vector2d NORTH_WEST_VECTOR = new Vector2d(-1,1);
-    public Vector2d toUnitVector(){
-        return switch(this){
+    private final static Vector2d NORTH_VECTOR = new Vector2d(0, 1);
+    private final static Vector2d NORTH_EAST_VECTOR = new Vector2d(1, 1);
+    private final static Vector2d EAST_VECTOR = new Vector2d(1, 0);
+    private final static Vector2d SOUTH_EAST_VECTOR = new Vector2d(1, -1);
+    private final static Vector2d SOUTH_VECTOR = new Vector2d(0, -1);
+    private final static Vector2d SOUTH_WEST_VECTOR = new Vector2d(-1, -1);
+    private final static Vector2d WEST_VECTOR = new Vector2d(-1, 0);
+    private final static Vector2d NORTH_WEST_VECTOR = new Vector2d(-1, 1);
+
+    public Vector2d toUnitVector() {
+        return switch (this) {
             case NORTH -> NORTH_VECTOR;
             case NORTH_EAST -> NORTH_EAST_VECTOR;
             case EAST -> EAST_VECTOR;

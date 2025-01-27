@@ -15,16 +15,16 @@ public class SimulationEngine {
         this.simulations = simulations;
     }
 
-    public void runSync(){
-        for(Simulation simulation : simulations){
+    public void runSync() {
+        for (Simulation simulation : simulations) {
             System.out.println("Starting simulation");
             simulation.run();
             System.out.println("Simulation completed");
         }
     }
 
-    public void runAsync(){
-        for(Simulation simulation : simulations){
+    public void runAsync() {
+        for (Simulation simulation : simulations) {
             System.out.println("Starting simulation");
             Thread thread = new Thread(simulation);
             threads.add(thread);
@@ -32,23 +32,25 @@ public class SimulationEngine {
         }
         awaitSimulationsEnd();
     }
-    public void runAsyncInThreadPool(){
-        for(Simulation simulation : simulations){
+
+    public void runAsyncInThreadPool() {
+        for (Simulation simulation : simulations) {
             threadPool.submit(simulation);
         }
         awaitSimulationsEnd();
     }
-    public void awaitSimulationsEnd(){
-        try{
-            for(Thread thread : threads){
+
+    public void awaitSimulationsEnd() {
+        try {
+            for (Thread thread : threads) {
                 thread.join();
             }
             threadPool.shutdown();
-            if(!threadPool.awaitTermination(10, TimeUnit.SECONDS)){
+            if (!threadPool.awaitTermination(10, TimeUnit.SECONDS)) {
                 threadPool.shutdownNow();
             }
-        }catch(InterruptedException e){
-            System.out.println(e.getMessage());
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage()); // czy to dobry wybór?
         }
     }
 

@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MapDirectionTest {
@@ -13,6 +14,7 @@ class MapDirectionTest {
 
         assertEquals(new Vector2d(0, 1), result, "NORTH should return (0, 1)");
     }
+
     @Test
     void toUnitVectorIncorrect() {
         MapDirection direction = MapDirection.SOUTH_EAST;

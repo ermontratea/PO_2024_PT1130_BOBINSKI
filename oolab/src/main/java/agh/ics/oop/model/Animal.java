@@ -1,41 +1,47 @@
 package agh.ics.oop.model;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 
-public class Animal implements WorldElement{
+public class Animal implements WorldElement {
     public final static Vector2d DEATH_VECTOR = new Vector2d(-1, -1);
-    Random random = new Random();
+    Random random = new Random(); // modyfikator dostępu? static?
     private int direction;
     private Vector2d position;
     private int age = 0;
     private List<Animal> children = new ArrayList<>();
-    private int[] genes;
+    private int[] genes; // czy to nie powinna być osobna klasa?
     private int energy;
     private int currentGene;
-    private int eatenGrass=0;
+    private int eatenGrass = 0;
 
-    public int getEatenGrass(){
+    public int getEatenGrass() {
         return eatenGrass;
     }
-    public void eatGrass(){
+
+    public void eatGrass() {
         eatenGrass++;
     }
 
     public void addEnergy(int energy) {
         this.energy += energy;
     }
+
     public int getDescendants() {
-        if (children.size() == 0) {return 0;}
+        if (children.size() == 0) {
+            return 0;
+        }
         int result = 0;
         for (Animal child : children) {
             result = result + child.getDescendants();
         }
         return result;
     }
+
     public int[] getGenes() {
-        return genes;
+        return genes; // dehermetyzacja
     }
 
     public void addChild(Animal animal) {
@@ -66,22 +72,27 @@ public class Animal implements WorldElement{
     public Vector2d getPosition() {
         return this.position;
     }
-    public int getEnergy(){
+
+    public int getEnergy() {
         return this.energy;
     }
+
     public int getCurrentGene() {
         return currentGene;
     }
-    public int getGene(){
+
+    public int getGene() { // czym się różni getGene od getCurrentGene?
         return genes[currentGene];
     }
 
     public int getAge() {
         return age;
     }
+
     public List<Animal> getChildren() {
         return children;
     }
+
     public int getDirection() {
         return this.direction;
     }
@@ -97,29 +108,33 @@ public class Animal implements WorldElement{
         potentialNewPosition = map.moveAroundEarth(potentialNewPosition);
         if (map.canMoveTo(potentialNewPosition)) {
             this.position = potentialNewPosition;
-        }else{this.direction = (this.direction+4)%8;}
+        } else {
+            this.direction = (this.direction + 4) % 8;
+        }
         energy--;
         age++;
-        currentGene=(currentGene+1)%genes.length;
+        currentGene = (currentGene + 1) % genes.length;
         return this.position;
     }
-    public boolean isBetterAnimal(Animal animal) {
+
+    public boolean isBetterAnimal(Animal animal) { // nie wygodniej by było zrobić compareTo?
         if (this.energy > animal.getEnergy()) {
             return true;
-        } else if (this.energy == animal.getEnergy()){
-            if (this.age>animal.getAge())
-            {return true;}
-            else if (this.age==animal.getAge())
-            {if(this.children.size()>animal.getChildren().size())
-            {return true;}
-            else if (this.children.size()==animal.getChildren().size())
-            {return random.nextBoolean();}
-            else return false;}
-            else return false;
-        }else return false;
+        } else if (this.energy == animal.getEnergy()) {
+            if (this.age > animal.getAge()) {
+                return true;
+            } else if (this.age == animal.getAge()) {
+                if (this.children.size() > animal.getChildren().size()) {
+                    return true;
+                } else if (this.children.size() == animal.getChildren().size()) {
+                    return random.nextBoolean();
+                } else return false;
+            } else return false;
+        } else return false;
     }
-    public MapDirection geneToMapDirection(int direction) {
-        return switch(direction){
+
+    public MapDirection geneToMapDirection(int direction) { // tylko że to nie tak powinno działać
+        return switch (direction) {
             case 0 -> MapDirection.NORTH;
             case 1 -> MapDirection.NORTH_EAST;
             case 2 -> MapDirection.EAST;
