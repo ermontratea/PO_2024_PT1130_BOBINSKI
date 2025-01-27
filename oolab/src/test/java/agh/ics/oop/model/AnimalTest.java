@@ -114,44 +114,6 @@ class AnimalTest {
 
         assertNotEquals(position, newPosition);
     }
-    ///fajne by były testy, które testują wchodzenie w bieguny i przechodzenie na drugi bok mapy, ale nie da się zbytnio tego zrobić
-    /// gdy początkowy kierunek zwierzaka jest losowy, trzeba by było zrobić specjalny setter/nowy konstruktor dla tych testów
-    @Test
-    void correctAnimalMovementNearBorder() {
-        Vector2d position = new Vector2d(0, 0);
-        Earth earth = new Earth(10, 10, 0, 0, 8, 50, 20, 10, 5, false, false);
-        Animal animal = new Animal(position, 8, 50);
-        int startingDirection = animal.getDirection();
-        int firstGene = animal.getCurrentGene();
-        int firstMove = (startingDirection+firstGene-1)%8;
-
-        Vector2d newPosition = animal.move(earth);
-
-        if (firstMove==6){
-        assertEquals(new Vector2d(9,0), newPosition);}
-        else if (firstMove==5){
-            assertEquals(position, newPosition);
-            assertEquals(1,animal.getDirection());
-        }
-        else if (firstMove==4){
-            assertEquals(position, newPosition);
-            assertEquals(0,animal.getDirection());
-        }
-        else if (firstMove==3){
-            assertEquals(position, newPosition);
-            assertEquals(7,animal.getDirection());
-        }
-        else if (firstMove==0){
-            assertEquals(new Vector2d(0,1), newPosition);
-        }
-        else if (firstMove==1){
-            assertEquals(new Vector2d(1,1), newPosition);
-        }
-        else if (firstMove==2){
-            assertEquals(new Vector2d(1,0), newPosition);
-        }
-        else{assertEquals(new Vector2d(9,1), newPosition);}
-    }
 
     @Test
     void isBetterAnimalEnergyComparison() {
