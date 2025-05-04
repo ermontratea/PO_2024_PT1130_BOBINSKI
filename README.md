@@ -29,7 +29,7 @@ Symulacja przedstawia ewolucję populacji zwierząt w ograniczonym środowisku. 
 2. Sklonuj repozytorium:
 
    ```bash
-   git clone https://github.com/twoj-login/nazwa-projektu.git
+   git clone https://github.com/ermontratea/PO_2024_PT1130_BOBINSKI.git
    cd nazwa-projektu
    ```
    Zbuduj projekt:
