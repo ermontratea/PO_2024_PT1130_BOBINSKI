@@ -32,7 +32,7 @@ Symulacja przedstawia ewolucję populacji zwierząt w ograniczonym środowisku. 
    git clone https://github.com/twoj-login/nazwa-projektu.git
    cd nazwa-projektu
    ```
-   zbuduj projekt:
+   Zbuduj projekt:
    ```bash
    ./gradlew build
    ```
