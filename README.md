@@ -25,14 +25,14 @@ The simulation depicts the evolution of an animal population within a confined e
    git clone https://github.com/ermontratea/PO_2024_PT1130_BOBINSKI.git
    cd PO_2024_PT1130_BOBINSKI
    ```
-2.Build the project:
+3.Build the project:
    ```bash
    ./gradlew build
    ```
-3.Run the application:
+4.Run the application:
    ```bash
    ./gradlew run
-
+   ```
 **Authors** 
 Tymon Bobiński
 Mikołaj Kaleta
