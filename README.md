@@ -34,5 +34,5 @@ The simulation depicts the evolution of an animal population within a confined e
    ./gradlew run
    ```
 **Authors** 
-Tymon Bobiński
-Mikołaj Kaleta
+- Tymon Bobiński
+- Mikołaj Kaleta
