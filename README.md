@@ -33,6 +33,6 @@ The simulation depicts the evolution of an animal population within a confined e
    ```bash
    ./gradlew run
    ```
-**Authors** 
+## Authors
 - Tymon Bobiński
 - Mikołaj Kaleta
