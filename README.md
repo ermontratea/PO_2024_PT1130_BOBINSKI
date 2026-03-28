@@ -1,42 +1,38 @@
-# PO_2024_PT1130_BOBINSKI
+# Animal Simulation – Object-Oriented Programming Project
+This project was developed as part of the Object-Oriented Programming course (3rd semester). Its objective was to implement a simulation of an environment with an animal population. The application was written entirely in Java, utilizing JavaFX for the graphical user interface and Gradle as the build system.
 
-# 🐾 Symulacja Zwierząt – Projekt z Programowania Obiektowego
+## Project Description
+The simulation depicts the evolution of an animal population within a confined environment. Animals move, reproduce, gain energy from food, and die based on various environmental factors. The goal of the project was not only to create a functional simulation but also to design a clear architecture consistent with object-oriented programming principles.
 
-Projekt realizowany w ramach przedmiotu **Programowanie Obiektowe** (3. semestr), którego celem była implementacja **symulacji środowiska z populacją zwierząt**. Aplikacja została w całości napisana w **Javie** z użyciem **JavaFX** jako interfejsu graficznego oraz **Gradle** jako systemu budowania.
+## Main Functionalities
+- Simulation of days and animal life cycles
+- Dynamic reproduction and death of animals
+- Gathering and consuming plants
+- Statistics: animal count, plant count, average lifespan
+- Tracking mode for a specific animal
+- Configurable simulation parameters before startup
 
-## 🎯 Opis projektu
+## Technologies
+- Java 17
+- JavaFX 17 – graphical user interface
+- Gradle – build automation
 
-Symulacja przedstawia ewolucję populacji zwierząt w ograniczonym środowisku. Zwierzęta poruszają się, rozmnażają, zdobywają energię z pożywienia i umierają w zależności od różnych czynników środowiskowych. Celem projektu było nie tylko stworzenie działającej symulacji, ale również zaprojektowanie czytelnej architektury zgodnej z zasadami programowania obiektowego.
+## Running the Project
+1. Install Java 17+
 
-## 🧠 Główne funkcjonalności
-
-- Symulacja dni oraz cyklu życia zwierząt
-- Dynamiczne rozmnażanie i śmierć zwierząt
-- Zbieranie i spożywanie roślin
-- Statystyki: liczba zwierząt, liczba roślin, średnia długość życia
-- Tryb obserwacji konkretnego zwierzęcia
-- Możliwość konfiguracji parametrów symulacji przed startem
-
-## 🖥️ Technologie
-
-- **Java 17**
-- **JavaFX 17** – interfejs graficzny
-- **Gradle** – budowanie projektu
-
-## ▶️ Uruchamianie projektu
-
-1. Zainstaluj **Java 17+**
-2. Sklonuj repozytorium:
-
+2. Clone the repository:
    ```bash
    git clone https://github.com/ermontratea/PO_2024_PT1130_BOBINSKI.git
-   cd nazwa-projektu
+   cd PO_2024_PT1130_BOBINSKI
    ```
-   Zbuduj projekt:
+2.Build the project:
    ```bash
    ./gradlew build
    ```
-   Uruchom aplikację:
+3.Run the application:
    ```bash
    ./gradlew run
-   ```
+
+**Authors** 
+Tymon Bobiński
+Mikołaj Kaleta
