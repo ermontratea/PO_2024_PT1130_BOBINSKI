@@ -17,6 +17,26 @@ The simulation depicts the evolution of an animal population within a confined e
 - JavaFX 17 – graphical user interface
 - Gradle – build automation
 
+## Preview
+
+### Configuration panel
+Here you can choose a preset configuration or create a new one. 
+
+![Configuration Panel](pictures/configurationspanel.png)
+
+### Simulation Panel
+
+![Simulation Panel1](pictures/sim1.png)
+
+Observing an animal.
+![Simulation Panel3](pictures/sim3.png)
+
+Displaying fertile tiles.
+![Simulation Panel4](pictures/sim4.png)
+
+Different map size.
+![Simulation Panel5](pictures/sim5.png)
+
 ## Running the Project
 1. Install Java 17+
 
